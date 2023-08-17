@@ -48,12 +48,21 @@ jobs:
 
     - uses: chainguard-images/actions/apko-build@main
       with:
-        config: apko.yaml
-        tag: portefaix-distroless:dev
-        keyring-append: /github/workspace/melange.rsa.pub
+        config: cicd/apko.yaml
+        tag: portefaix-distroless:cicd-dev
+        keyring-append: /work/melange.rsa.pub
         archs: x86_64,aarch64
 
-    - uses: actions/upload-artifact@v3
+    - name: load image for testing
+      run: docker load -i output.tar
+
+    - name: run structure tests
+      uses: plexsystems/container-structure-test-action@v0.2.0
       with:
-        name: template.tar
-        path: ./output.tar
+        image: distroless-k8s-test
+        config: tests.yaml
+
+    # - uses: actions/upload-artifact@v3
+    #   with:
+    #     name: template.tar
+    #     path: ./output.tar

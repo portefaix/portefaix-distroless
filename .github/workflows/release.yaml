@@ -52,30 +52,58 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - uses: sigstore/cosign-installer@main
+    - uses: chainguard-dev/actions/setup-melange@main
+    - run: |
+        echo "$SIGNING_KEY" >${{ github.workspace }}/melange.rsa
+        echo "$SIGNING_KEY_PUB" >${{ github.workspace }}/melange.rsa.pub
+      env:
+        SIGNING_KEY: "${{ secrets.MELANGE_SIGNING_KEY }}"
+        SIGNING_KEY_PUB: "${{ secrets.MELANGE_SIGNING_KEY_PUB }}"
 
-    - uses: chainguard-dev/actions/melange-build@main
+    - name: Dependencies
+      run: ./deps.sh
+
+    - name: Strip binaries
+      run: |
+        sudo apt-get update -q
+        sudo apt-get install -qy binutils-aarch64-linux-gnu
+        strip *-amd64
+        aarch64-linux-gnu-strip *-arm64
+
+    - uses: chainguard-dev/actions/melange-build-pkg@main
       with:
-        sign-with-temporary-key: true
-        config: melange.yaml
-        empty-workspace: true
+        config: cicd/melange.yaml
         archs: x86_64,aarch64
+        sign-with-key: true
+        signing-key-path: ${{ github.workspace }}/melange.rsa
+        keyring-append: ${{ github.workspace }}/melange.rsa.pub
+        update-index: true
 
-    - id: apko
-      uses: chainguard-images/actions/apko-snapshot@main
+    - uses: chainguard-images/actions/apko-build@main
+      with:
+        config: cicd/apko.yaml
+        tag: portefaix-distroless-cicd-test
+        keyring-append: melange.rsa.pub
+        archs: x86_64
+
+    - name: load image for testing
+      run: docker load -i output.tar
+    - name: run structure tests
+      uses: plexsystems/container-structure-test-action@v0.2.0
+      with:
+        image: portefaix-distroless-cicd-test
+        config: cicd/tests.yaml
+
+    - uses: chainguard-images/actions/apko-publish@main
+      id: apko
       with:
         config: apko.yaml
+        tag: ghcr.io/${{ github.repository }}:latest
         image_refs: apko.images
-        base-tag: ghcr.io/${{ github.repository }}
-        keyring-append: /github/workspace/melange.rsa.pub
+        keyring-append: melange.rsa.pub
+        source-date-epoch: '0'
         archs: x86_64,aarch64
         sbom-formats: CycloneDX,SPDX
-
-    - name: Emit Image Refs output
-      id: emit-refs
-      run: |
-        cat apko.images | sed 's/$/\n/g' | grep -v '^$' | jq -R -s -c 'split("\n")[:-1]' | jq .
-        echo "image-refs=$(cat apko.images | sed 's/$/\n/g' | grep -v '^$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
   scan:
     name: Scan images
