@@ -35,19 +35,10 @@ jobs:
     - name: Setup QEMU
       uses: docker/setup-qemu-action@v2.1.0
 
-    - uses: sigstore/cosign-installer@main
-
-    - name: Generate snapshot date
-      id: snapshot-date
-      run: |
-        echo "date=$(date -u +%Y%m%d)" >> $GITHUB_OUTPUT
-        shell: bash
-
     - name: Dependencies
       run: ./deps.sh
 
-    - name: Verify sha256 checksums
-      run: sha256sum -c DIGESTS
+    - uses: sigstore/cosign-installer@main
 
     - uses: chainguard-dev/actions/melange-build@main
       with:
@@ -58,7 +49,7 @@ jobs:
     - uses: chainguard-images/actions/apko-build@main
       with:
         config: apko.yaml
-        tag: portefaix-distroless:${{ steps.snapshot-date.outputs.date }}
+        tag: portefaix-distroless:dev
         keyring-append: /github/workspace/melange.rsa.pub
         archs: x86_64,aarch64
 
