@@ -1,0 +1,51 @@
+name: Image / Build
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: Build OCI image
+    runs-on: ubuntu-latest
+
+    # https://docs.github.com/en/actions/reference/authentication-in-a-workflow
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup QEMU
+      uses: docker/setup-qemu-action@v2.1.0
+
+    - uses: sigstore/cosign-installer@main
+
+    - name: Generate snapshot date
+      id: snapshot-date
+      run: |
+        echo "date=$(date -u +%Y%m%d)" >> $GITHUB_OUTPUT
+        shell: bash
+
+    - name: Dependencies
+      run: ./deps.sh
+
+    - name: Verify sha256 checksums
+      run: sha256sum -c DIGESTS
+
+    - uses: chainguard-dev/actions/melange-build@main
+      with:
+        sign-with-temporary-key: true
+        config: melange.yaml
+        archs: x86_64,aarch64
+
+    - uses: chainguard-images/actions/apko-build@main
+      with:
+        config: apko.yaml
+        tag: portefaix-distroless:${{ steps.snapshot-date.outputs.date }}
+        keyring-append: /github/workspace/melange.rsa.pub
+        archs: x86_64,aarch64
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: template.tar
+        path: ./output.tar
