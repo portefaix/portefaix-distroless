@@ -1,9 +1,25 @@
 #!/bin/bash
 
-ARCHS="amd64 arm64"
+# Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
 
-KUBECTL_VERSION=1.27.1
-HELM_VERSION=v3.11.3
+# datasource=github-tags depName=github.com/kubernetes/kubectl
+KUBECTL_VERSION="1.27.1"
+# datasource=github-tags depName=github.com/helm/helm
+HELM_VERSION="v3.11.3"
 # datasource=github-tags depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION="v5.0.1"
 # datasource=github-tags depName=mikefarah/yq
@@ -19,21 +35,23 @@ CONFTEST_VERSION="0.25.0"
 # datasource=github-tags depName=jsonnet-bundler/jsonnet-bundler
 JB_VERSION="v0.4.0"
 
+ARCHS="amd64 arm64"
+
 for arch in $ARCHS; do
     echo "Download Kubectl ${arch} ..."
     curl -sL "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${arch}/kubectl" -o "kubectl-${arch}"
-    
+
     echo "Download Helm ${arch} ..."
     curl -fsL "https://get.helm.sh/helm-${HELM_VERSION}-linux-${arch}.tar.gz" | tar xz
-	mv "linux-${arch}/helm" "helm-${arch}"
-	rm -rf "linux-${arch}"
+    mv "linux-${arch}/helm" "helm-${arch}"
+    rm -rf "linux-${arch}"
 
     echo "Download Kustomize ${arch} ..."
     curl -fsL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_${arch}.tar.gz" | tar xz
-	mv kustomize "kustomize-${arch}"
+    mv kustomize "kustomize-${arch}"
 
     echo "Download Yq ${arch} ..."
-    curl -sL "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_${arch}" -o yq-${arch}
+    curl -sL "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_${arch}" -o "yq-${arch}"
     chmod +x "yq-${arch}"
 
     echo "Download Kubeval ${arch} ..."
@@ -47,7 +65,7 @@ for arch in $ARCHS; do
     chmod +x "kubeconform-${arch}"
 
     echo "Download Opa ${arch} ..."
-    curl -sL "https://github.com/open-policy-agent/opa/releases/download/${OPA_VERSION}/opa_linux_amd64" -o opa-${arch}
+    curl -sL "https://github.com/open-policy-agent/opa/releases/download/${OPA_VERSION}/opa_linux_amd64" -o "opa-${arch}"
     chmod +x "opa-${arch}"
 
     echo "Download Conftest ${arch} ..."
@@ -56,6 +74,6 @@ for arch in $ARCHS; do
     chmod +x "conftest-${arch}"
 
     echo "Download Jb ${arch} ..."
-    curl -sL "https://github.com/jsonnet-bundler/jsonnet-bundler/releases/download/${JB_VERSION}/jb-linux-amd64" -o jb-${arch}
+    curl -sL "https://github.com/jsonnet-bundler/jsonnet-bundler/releases/download/${JB_VERSION}/jb-linux-amd64" -o "jb-${arch}"
     chmod +x "jb-${arch}"
 done
