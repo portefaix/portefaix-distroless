@@ -61,7 +61,7 @@ jobs:
         SIGNING_KEY_PUB: "${{ secrets.MELANGE_SIGNING_KEY_PUB }}"
 
     - name: Dependencies
-      run: ./deps.sh
+      run: ./cicd/deps.sh
 
     - name: Strip binaries
       run: |
