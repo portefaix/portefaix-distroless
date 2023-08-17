@@ -1,0 +1,54 @@
+---
+package:
+  name: portefaix-cicd
+  version: 0.1.0
+  description: "Portefaix tools for CI/CD"
+  target-architecture:
+    - all
+  copyright:
+    - license: Apache-2.0
+      paths:
+        - "*"
+  dependencies:
+    runtime:
+      - grype
+      - syft
+      - trivy
+      - cosign
+
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      # - https://packages.wolfi.dev/os
+      - https://dl-cdn.alpinelinux.org/alpine/edge/main
+      - https://dl-cdn.alpinelinux.org/alpine/edge/community
+    packages:
+      # - wolfi-baselayout # replaces alpine-baselayout-data
+      - alpine-baselayout-data
+      - ca-certificates-bundle
+      - busybox
+      - curl
+
+pipeline:
+  # - uses: autoconf/make
+  # - uses: autoconf/make-install
+  # - uses: strip
+  - runs: |
+      ARCH=$(uname -m)
+      case $ARCH in
+        "x86_64") ARCH="amd64" ;;
+        "aarch64") ARCH="arm64" ;;
+      esac
+      install -D entrypoint.sh ${{targets.destdir}}/usr/bin/entrypoint.sh
+      install -D kubectl-${ARCH} ${{targets.destdir}}/usr/bin/kubectl
+      install -D helm-${ARCH} ${{targets.destdir}}/usr/bin/helm
+      install -D kustomize-${ARCH} ${{targets.destdir}}/usr/bin/kustomize
+      install -D yq-${ARCH} ${{targets.destdir}}/usr/bin/yq
+      install -D kubeval-${ARCH} ${{targets.destdir}}/usr/bin/kubeval
+      install -D kubeconform-${ARCH} ${{targets.destdir}}/usr/bin/kubeconform
+      install -D opa-${ARCH} ${{targets.destdir}}/usr/bin/opa
+      install -D conftest-${ARCH} ${{targets.destdir}}/usr/bin/conftest
+      install -D jb-${ARCH} ${{targets.destdir}}/usr/bin/jb
+

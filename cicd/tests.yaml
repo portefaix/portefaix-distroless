@@ -1,0 +1,32 @@
+---
+schemaVersion: 2.0.0
+fileExistenceTests:
+  - name: "kubectl"
+    path: "/usr/bin/kubectl"
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    isExecutableBy: "group"
+  - name: "kustomize"
+    path: "/usr/bin/kustomize"
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    isExecutableBy: "group"
+  - name: "helm"
+    path: "/usr/bin/helm"
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    isExecutableBy: "group"
+commandTests:
+  - name: "helm"
+    command: "helm"
+    args: ["version"]
+    expectedOutput: ["version.BuildInfo"]
+  - name: "kubectl"
+    command: "kubectl"
+    args: ["version", "--output=json"]
+    exitCode: 1
+    expectedOutput: ["clientVersion"]
+  - name: "kustomize"
+    command: "kustomize"
+    args: ["version", "-o", "yaml"]
+    expectedOutput: ["version:", "gitCommit:"]
