@@ -1,3 +1,19 @@
+#    Conftest - Write tests against your config files
+#
+#    Copyright (C) 2019 Gareth Rushgrove
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        https://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
 # Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,130 +35,94 @@ name: Image / Release
 
 on: # yamllint disable-line rule:truthy
   push:
-    branches:
-    - main
+    tags:
+    - 'v*'
 
-    paths-ignore:
-    - README.md
-
-  schedule:
-  - cron: '0 0 * * *'
-
-  # Allow manually triggered workflows by maintainers without any parameters to
-  # trigger a proactive rebuild (e.g. when a new package lands)
-  workflow_dispatch: {}
-
-# Don't run multiple releases concurrently.
-concurrency: release
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  ARCHS: x86_64,aarch64,armv7
+  FULCIO_URL: https://fulcio.sigstore.dev
+  REKOR_URL: https://rekor.sigstore.dev
 
 jobs:
   build:
     name: Release OCI image
     runs-on: ubuntu-latest
 
-    outputs:
-      image-refs: ${{ steps.emit-refs.outputs.image-refs }}
-
     # https://docs.github.com/en/actions/reference/authentication-in-a-workflow
     permissions:
-      id-token: write
-      packages: write
       contents: read
+      packages: write
+      # Required for keyless signing with fulcio
+      id-token: write
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
 
-    - uses: chainguard-dev/actions/setup-melange@main
-    - run: |
-        echo "$SIGNING_KEY" >${{ github.workspace }}/melange.rsa
-        echo "$SIGNING_KEY_PUB" >${{ github.workspace }}/melange.rsa.pub
-      env:
-        SIGNING_KEY: "${{ secrets.MELANGE_SIGNING_KEY }}"
-        SIGNING_KEY_PUB: "${{ secrets.MELANGE_SIGNING_KEY_PUB }}"
+    - name: Extract Docker metadata
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+        sep-tags: ' '
 
     - name: Dependencies
       run: ./deps.sh
 
-    - name: Strip binaries
-      run: |
-        sudo apt-get update -q
-        sudo apt-get install -qy binutils-aarch64-linux-gnu
-        strip *-amd64
-        aarch64-linux-gnu-strip *-arm64
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@main
 
-    - uses: chainguard-dev/actions/melange-build-pkg@main
+    - name: Setup QEMU
+      uses: docker/setup-qemu-action@v2.2.0
+
+    - name: Run Melange
+      uses: chainguard-dev/actions/melange-build@main
       with:
         config: melange.yaml
-        archs: x86_64,aarch64
-        sign-with-key: true
-        signing-key-path: ${{ github.workspace }}/melange.rsa
-        keyring-append: ${{ github.workspace }}/melange.rsa.pub
-        update-index: true
+        sign-with-temporary-key: true
+        archs: ${{ env.ARCHS }}
 
-    - uses: chainguard-images/actions/apko-build@main
+    - name: Run apko publish
+      uses: chainguard-images/actions/apko-publish@main
+      id: apko-publish
       with:
         config: apko.yaml
-        tag: portefaix-distroless:dev
-        keyring-append: melange.rsa.pub
-        archs: x86_64
-
-    - name: load image for testing
-      run: docker load -i output.tar
-
-    - name: run structure tests
-      uses: plexsystems/container-structure-test-action@v0.2.0
-      with:
-        image: portefaix-distroless:dev
-        config: tests.yaml
-
-    - uses: chainguard-images/actions/apko-publish@main
-      id: apko
-      with:
-        config: apko.yaml
-        tag: ghcr.io/${{ github.repository }}:latest
+        tag: ${{ steps.meta.outputs.tags }}
+        keyring-append: /work/melange.rsa.pub
         image_refs: apko.images
-        keyring-append: melange.rsa.pub
-        source-date-epoch: '0'
-        archs: x86_64,aarch64
-        sbom-formats: CycloneDX,SPDX
+        archs: ${{ env.ARCHS }}
 
-  scan:
-    name: Scan images
-    needs: build
-    runs-on: ubuntu-latest
-
-    # https://docs.github.com/en/actions/reference/authentication-in-a-workflow
-    permissions:
-      id-token: write
-      packages: write
-      contents: read
-
-    strategy:
-      matrix:
-        ref: ${{ fromJson(needs.build.outputs.image-refs) }}
-    steps:
-    - run: |
-        echo ${{ matrix.ref }}
-
-    - uses: chainguard-images/actions/vul-scans@main
-      id: scans
+    - name: Log in to registry
+      uses: docker/login-action@v2
       with:
-        registry: ghcr.io
-        image: ${{ matrix.ref }}
-        RUN_SNYK: "false"
-        RUN_GRYPE: "false"
-        DOCKER_LOGIN: 'true'
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Image Vulnerability scan output
-      shell: bash
+    - name: Sign the image
       env:
-        SNYK_COUNT: ${{ steps.scans.outputs.SNYK_COUNT }}
-        GRYPE_COUNT: ${{ steps.scans.outputs.GRYPE_COUNT }}
-        TRIVY_COUNT: ${{ steps.scans.outputs.TRIVY_COUNT }}
+        COSIGN_EXPERIMENTAL: 'true'
       run: |
-        echo "Image Vulnerability scan output" >> $GITHUB_STEP_SUMMARY
-        echo "Image ID: ${{ matrix.ref }}" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "Snyk Count: $SNYK_COUNT" >> $GITHUB_STEP_SUMMARY
-        echo "Grype Count: $GRYPE_COUNT" >> $GITHUB_STEP_SUMMARY
-        echo "Trivy Count: $TRIVY_COUNT" >> $GITHUB_STEP_SUMMARY
+        cosign sign ${{ steps.apko-publish.outputs.digest }} \
+          --yes \
+          --fulcio-url ${{ env.FULCIO_URL }} \
+          --rekor-url ${{ env.REKOR_URL }} \
+          -a sha=${{ github.sha }} \
+          -a run_id=${{ github.run_id }} \
+          -a run_attempt=${{ github.run_attempt }}
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: image
+        image-ref: ${{ steps.apko-publish.outputs.digest }}
+        format: table
+        exit-code: '1'
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'

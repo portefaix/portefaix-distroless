@@ -1,3 +1,19 @@
+#    Conftest - Write tests against your config files
+#
+#    Copyright (C) 2019 Gareth Rushgrove
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        https://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
 # Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,16 +65,6 @@ validate: ## Execute git-hooks
 ##@ Chainguard
 
 .PHONY: build
-build: guard-NAME ## Build the APK
-	@echo -e "$(OK_COLOR)[$(APP)] Build the APK for $(NAME)$(NO_COLOR)"
-	@pushd $(NAME) && ./build.sh && popd
-
-# .PHONY: melange
-# melange: guard-NAME ## Build the APK
-# 	@echo -e "$(OK_COLOR)[$(APP)] Build the APK for $(NAME)$(NO_COLOR)"
-# 	@$(NAME)/melange.sh
-
-# .PHONY: apko
-# apko: guard-NAME ## Install OPA policies
-# 	@echo -e "$(OK_COLOR)[$(APP)] Build the Container image for $(NAME)$(NO_COLOR)"
-# 	@$(NAME)/apko.sh
+build: ## Build the APK using Docker images
+	@echo -e "$(OK_COLOR)[$(APP)] Build the Container image$(NO_COLOR)"
+	@./build.sh
