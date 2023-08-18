@@ -43,7 +43,7 @@ jobs:
     - uses: chainguard-dev/actions/melange-build@main
       with:
         sign-with-temporary-key: true
-        config: melange.yaml
+        config: cicd/melange.yaml
         archs: x86_64,aarch64
 
     - uses: chainguard-images/actions/apko-build@main
@@ -59,8 +59,8 @@ jobs:
     - name: run structure tests
       uses: plexsystems/container-structure-test-action@v0.2.0
       with:
-        image: distroless-k8s-test
-        config: tests.yaml
+        image: portefaix-distroless-cicd-test
+        config: cicd/tests.yaml
 
     # - uses: actions/upload-artifact@v3
     #   with:
