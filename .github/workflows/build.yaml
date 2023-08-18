@@ -36,20 +36,20 @@ jobs:
       uses: docker/setup-qemu-action@v2.1.0
 
     - name: Dependencies
-      run: ./cicd/deps.sh
+      run: ./deps.sh
 
     - uses: sigstore/cosign-installer@main
 
     - uses: chainguard-dev/actions/melange-build@main
       with:
         sign-with-temporary-key: true
-        config: cicd/melange.yaml
+        config: melange.yaml
         archs: x86_64,aarch64
 
     - uses: chainguard-images/actions/apko-build@main
       with:
-        config: cicd/apko.yaml
-        tag: portefaix-distroless:cicd-dev
+        config: apko.yaml
+        tag: portefaix-distroless:dev
         keyring-append: /work/melange.rsa.pub
         archs: x86_64,aarch64
 
@@ -59,8 +59,8 @@ jobs:
     - name: run structure tests
       uses: plexsystems/container-structure-test-action@v0.2.0
       with:
-        image: portefaix-distroless-cicd-test
-        config: cicd/tests.yaml
+        image: portefaix-distroless:dev
+        config: tests.yaml
 
     # - uses: actions/upload-artifact@v3
     #   with:

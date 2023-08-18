@@ -31,7 +31,7 @@ contents:
   - busybox
   - curl
   - wget
-  - portefaix-cicd@local
+  - portefaix-distroless@local
 accounts:
   groups:
   - groupname: nonroot

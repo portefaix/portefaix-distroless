@@ -61,7 +61,7 @@ jobs:
         SIGNING_KEY_PUB: "${{ secrets.MELANGE_SIGNING_KEY_PUB }}"
 
     - name: Dependencies
-      run: ./cicd/deps.sh
+      run: ./deps.sh
 
     - name: Strip binaries
       run: |
@@ -72,7 +72,7 @@ jobs:
 
     - uses: chainguard-dev/actions/melange-build-pkg@main
       with:
-        config: cicd/melange.yaml
+        config: melange.yaml
         archs: x86_64,aarch64
         sign-with-key: true
         signing-key-path: ${{ github.workspace }}/melange.rsa
@@ -81,8 +81,8 @@ jobs:
 
     - uses: chainguard-images/actions/apko-build@main
       with:
-        config: cicd/apko.yaml
-        tag: portefaix-distroless-cicd-test
+        config: apko.yaml
+        tag: portefaix-distroless:dev
         keyring-append: melange.rsa.pub
         archs: x86_64
 
@@ -92,8 +92,8 @@ jobs:
     - name: run structure tests
       uses: plexsystems/container-structure-test-action@v0.2.0
       with:
-        image: portefaix-distroless-cicd-test
-        config: cicd/tests.yaml
+        image: portefaix-distroless:dev
+        config: tests.yaml
 
     - uses: chainguard-images/actions/apko-publish@main
       id: apko

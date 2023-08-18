@@ -29,7 +29,9 @@ function echo_fail { echo -e "${color_red}✖ $*${reset_color}"; }
 function echo_success { echo -e "${color_green}✔ $*${reset_color}"; }
 function echo_info { echo -e "${color_blue}\uf120 $*${reset_color}"; }
 
+echo_info "[portefaix-distroless] Download dependencies"
 rm -fr packages
+./deps.sh
 
 echo_info "[portefaix-distroless] Generate temporary key"
 test -f melange.rsa || docker run --rm -it --privileged \
@@ -42,7 +44,7 @@ docker run --privileged --rm -v "$(pwd):/work" \
 
 echo_info "[portefaix-distroless] Building the Container Image"
 docker run --rm -v "$(pwd):/work" \
-    cgr.dev/chainguard/apko build apko.yaml portefaix-cicd:test portefaix-cicd.tar --arch "${ARCH}" -k melange.rsa.pub
+    cgr.dev/chainguard/apko build apko.yaml portefaix-distroless:dev portefaix-distroless.tar --arch "${ARCH}" -k melange.rsa.pub
 
 echo_info "[portefaix-distroless] Load image"
-docker load <portefaix-cicd.tar
+docker load <portefaix-distroless.tar

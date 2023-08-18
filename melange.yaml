@@ -16,7 +16,7 @@
 
 ---
 package:
-  name: portefaix-cicd
+  name: portefaix-distroless
   version: 0.1.0
   description: "Portefaix tools for CI/CD"
   target-architecture:

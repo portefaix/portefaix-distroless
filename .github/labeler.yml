@@ -21,7 +21,8 @@
 # Label area/xxx
 
 area/distroless:
-- cicd/**/*
+- apko.yaml
+- melange.yaml
 
 area/github:
 - .github/**/*

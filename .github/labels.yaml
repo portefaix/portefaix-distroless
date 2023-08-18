@@ -46,4 +46,5 @@ status:
 #   - '**/*.test.ts'
 
 'area/distroless':
-- cicd/**/*
+- melange.yaml
+- apko.yaml
