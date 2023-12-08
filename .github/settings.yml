@@ -26,41 +26,6 @@ repository:
 
 labels:
 
-## NEED
-
-- name: "needs/triage"
-  description: "Indicates an issue or PR lacks a `triage/foo` label and requires one."
-  color: "D669BE"
-
-- name: "needs/priority"
-  description: "Indicates a PR lacks a `priority/foo` label and requires one."
-  color: "D669BE"
-
-- name: "needs/kind"
-  description: "Indicates a PR lacks a `kind/foo` label and requires one."
-  color: "D669BE"
-
-- name: "needs/lifecycle"
-  description: "Indicates a PR lacks a `lifecycle/foo` label and requires one."
-  color: "D669BE"
-
-- name: "needs/area"
-  description: "Indicates an issue or PR lacks a `area/foo` label and requires one."
-  color: "D669BE"
-
-- name: "needs/size"
-  description: "Indicates an issue or PR lacks a `size/foo` label and requires one."
-  color: "D669BE"
-
-- name: "needs/status"
-  description: "Indicates an issue or PR lacks a `status/foo` label and requires one."
-  color: "D669BE"
-
-- name: "needs/cloud"
-  description: "Indicates a PR lacks a `cloud/foo` label and requires one."
-  color: "D669BE"
-
-
 ## AREA
 
 - name: "area/github"

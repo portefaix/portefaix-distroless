@@ -21,15 +21,13 @@
 # Label area/xxx
 
 area/distroless:
-- apko.yaml
-- melange.yaml
+- changed-files:
+  - any-glob-to-any-file: apko.yaml
+  - any-glob-to-any-file: melange.yaml
 
 area/github:
-- .github/**/*
+- changed-files:
+  - any-glob-to-any-file: .github/**/*
 
 ######################################
 # Label kind/xxx
-
-kind/documentation:
-- README.md
-- docs/**/*
