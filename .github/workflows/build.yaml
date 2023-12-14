@@ -45,7 +45,7 @@ jobs:
         keyring-append: /github/workspace/melange.rsa.pub
         archs: x86_64,aarch64
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: template.tar
         path: ./output.tar
