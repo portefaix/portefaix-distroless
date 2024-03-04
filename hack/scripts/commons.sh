@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 #    Conftest - Write tests against your config files
 #
 #    Copyright (C) 2019 Gareth Rushgrove
@@ -30,45 +32,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-include hack/commons.mk
+set -feu -o pipefail
 
-SCRIPTS_DIR="."
+reset_color="\\e[0m"
+color_red="\\e[31m"
+color_green="\\e[32m"
+color_blue="\\e[36m"
 
-# ====================================
-# D E V E L O P M E N T
-# ====================================
-
-##@ Development
-
-.PHONY: clean
-clean: ## Cleanup
-	@echo -e "$(OK_COLOR)[$(BANNER)] Cleanup$(NO_COLOR)"
-	@find . -name "*-amd64" | xargs rm -f
-	@find . -name "*-arm64" | xargs rm -f
-	@find . -name "melange.rsa*" | xargs rm -f
-	@find . -name "packages" | xargs rm -fr
-	@rm -f sbom-*.cdx sbom-*.json
-	@rm -f portefaix-distroless.tar
-
-.PHONY: check
-check: check-docker ## Check requirements
-
-.PHONY: init
-init: ## Initialize environment
-	$(VENV)/bin/pre-commit install
-
-.PHONY: validate
-validate: ## Execute git-hooks
-	@pre-commit run -a
-
-
-# ====================================
-# C H A I N G U A R D
-# ====================================
-
-##@ Chainguard
-
-.PHONY: build
-build: ## Build the APK using Docker images
-	@echo -e "$(OK_COLOR)[$(APP)] Build the Container image$(NO_COLOR)"
-	@$(SCRIPTS_DIR)/build.sh
+function echo_fail { echo -e "${color_red}✖ $*${reset_color}"; }
+function echo_success { echo -e "${color_green}✔ $*${reset_color}"; }
+function echo_info { echo -e "${color_blue}$*${reset_color}"; }

@@ -34,7 +34,20 @@
 name: Image / Build
 
 on: # yamllint disable-line rule:truthy
+  merge_group:
+  workflow_dispatch:
+  schedule:
+  - cron: "0 6,18 * * *" # 6am and 6pm every day
   pull_request:
+    paths:
+    - apko.yaml
+    - melange.yaml
+    - "hack/scripts/**"
+  push:
+    paths:
+    - apko.yaml
+    - melange.yaml
+    - "hack/scripts/**"
 
 env:
   REGISTRY: ghcr.io
@@ -72,7 +85,7 @@ jobs:
         sep-tags: ' '
 
     - name: Dependencies
-      run: ./deps.sh
+      run: ./hack/scripts/deps.sh
 
     - name: Install Cosign
       uses: sigstore/cosign-installer@main
