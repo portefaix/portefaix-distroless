@@ -90,6 +90,11 @@ jobs:
         empty-workspace: false
         sign-with-temporary-key: true
 
+    - name: Create temp copy of /work directory (used in next step)
+      shell: bash
+      run: |
+        rm -rf .apko-automount && cp -r /work .apko-automount
+
     - name: Run Apko
       uses: chainguard-images/actions/apko-build@main
       id: apko-build
@@ -98,6 +103,7 @@ jobs:
         archs: ${{ env.ARCHS }}
         tag: ${{ steps.meta.outputs.tags }}
         keyring-append: /work/melange.rsa.pub
+        automount-src: .apko-automount/.
         automount-dest: /work
 
     - name: Load image from apko-produced tarball
