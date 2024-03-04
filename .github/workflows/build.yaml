@@ -110,15 +110,3 @@ jobs:
       shell: bash
       run: |
         docker load < output.tar
-
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-
-    - uses: actions/upload-artifact@v4
-      with:
-        scan-type: image
-        image-ref: ${{ steps.apko-build.outputs.digest }}
-        format: table
-        exit-code: '1'
-        vuln-type: 'os,library'
-        severity: 'CRITICAL,HIGH'
