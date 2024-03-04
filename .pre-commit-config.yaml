@@ -20,7 +20,7 @@
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.4.0
+  rev: v4.5.0
   hooks:
   - id: check-merge-conflict
   - id: debug-statements
@@ -42,7 +42,7 @@ repos:
   - id: mixed-line-ending
   - id: trailing-whitespace
 - repo: https://github.com/compilerla/conventional-pre-commit
-  rev: v2.4.0
+  rev: v3.1.0
   hooks:
   - id: conventional-pre-commit
     stages: [commit-msg]
@@ -52,7 +52,7 @@ repos:
 #   hooks:
 #   - id: helmlint
 - repo: https://github.com/Lucas-C/pre-commit-hooks
-  rev: v1.5.4
+  rev: v1.5.5
   hooks:
   - id: insert-license
     files: (Makefile|Gemfile|\.mk|\.yaml|\.yml|\.tf|\.hcl|\.ini|\.rb|\.toml|\.sh)
@@ -84,7 +84,7 @@ repos:
   - id: shfmt
     args: ["-i 4"]
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.32.0
+  rev: v1.35.1
   hooks:
   - id: yamllint
     # exclude:
