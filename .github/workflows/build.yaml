@@ -111,7 +111,9 @@ jobs:
       run: |
         docker load < output.tar
 
-    - uses: distroless/actions/apko-publish@main
+    - name: Run apko publish
+      uses: chainguard-images/actions/apko-publish@main
+      id: apko-publish
       with:
         config: apko.yaml
         archs: ${{ env.ARCHS }}
