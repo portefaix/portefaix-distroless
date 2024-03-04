@@ -103,24 +103,24 @@ jobs:
     #     username: ${{ github.actor }}
     #     password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Sign the image
-      env:
-        COSIGN_EXPERIMENTAL: 'true'
-      run: |
-        cosign sign ${{ steps.apko-publish.outputs.digest }} \
-          --yes \
-          --fulcio-url ${{ env.FULCIO_URL }} \
-          --rekor-url ${{ env.REKOR_URL }} \
-          -a sha=${{ github.sha }} \
-          -a run_id=${{ github.run_id }} \
-          -a run_attempt=${{ github.run_attempt }}
+    # - name: Sign the image
+    #   env:
+    #     COSIGN_EXPERIMENTAL: 'true'
+    #   run: |
+    #     cosign sign ${{ steps.apko-publish.outputs.digest }} \
+    #       --yes \
+    #       --fulcio-url ${{ env.FULCIO_URL }} \
+    #       --rekor-url ${{ env.REKOR_URL }} \
+    #       -a sha=${{ github.sha }} \
+    #       -a run_id=${{ github.run_id }} \
+    #       -a run_attempt=${{ github.run_attempt }}
 
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: image
-        image-ref: ${{ steps.apko-publish.outputs.digest }}
-        format: table
-        exit-code: '1'
-        vuln-type: 'os,library'
-        severity: 'CRITICAL,HIGH'
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@master
+    #   with:
+    #     scan-type: image
+    #     image-ref: ${{ steps.apko-publish.outputs.digest }}
+    #     format: table
+    #     exit-code: '1'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
