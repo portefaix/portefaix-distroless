@@ -58,9 +58,7 @@ jobs:
     - name: Populate workspace
       shell: bash
       run: |
-        shopt -s dotglob && tmp="$(mktemp -d)" \
-          && mv ${{ inputs.variant }}/* ${tmp}/ \
-          && echo ".github/" >> .melangeignore && tree -a . \
+          echo ".github/" >> .melangeignore && tree -a . \
           && sudo rm -rf /work && sudo mkdir /work
 
     - name: Setup QEMU
