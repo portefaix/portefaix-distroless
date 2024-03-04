@@ -44,6 +44,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Populate workspace
+      shell: bash
+      run: |
+          echo ".github/" >> .melangeignore && tree -a . \
+          && sudo rm -rf /work && sudo mkdir /work
+
+    - name: Setup QEMU
+      uses: docker/setup-qemu-action@v3
+
     - name: Extract Docker metadata
       id: meta
       uses: docker/metadata-action@v4
@@ -61,32 +70,38 @@ jobs:
     - name: Install Cosign
       uses: sigstore/cosign-installer@main
 
-    - name: Setup QEMU
-      uses: docker/setup-qemu-action@v2.2.0
-
     - name: Run Melange
       uses: chainguard-dev/actions/melange-build@main
       with:
         config: melange.yaml
-        sign-with-temporary-key: true
         archs: ${{ env.ARCHS }}
+        signing-key-path: /work/melange.rsa
+        repository-path: /work/packages
+        empty-workspace: false
+        sign-with-temporary-key: true
+
+    - name: Create temp copy of /work directory (used in next step)
+      shell: bash
+      run: |
+        rm -rf .apko-automount && cp -r /work .apko-automount
 
     - name: Run apko publish
       uses: chainguard-images/actions/apko-publish@main
       id: apko-publish
       with:
         config: apko.yaml
+        archs: ${{ env.ARCHS }}
         tag: ${{ steps.meta.outputs.tags }}
         keyring-append: /work/melange.rsa.pub
-        image_refs: apko.images
-        archs: ${{ env.ARCHS }}
+        automount-src: .apko-automount/.
+        automount-dest: /work
 
-    - name: Log in to registry
-      uses: docker/login-action@v2
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Log in to registry
+    #   uses: docker/login-action@v2
+    #   with:
+    #     registry: ${{ env.REGISTRY }}
+    #     username: ${{ github.actor }}
+    #     password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Sign the image
       env:
