@@ -85,7 +85,7 @@ jobs:
         sep-tags: ' '
 
     - name: Dependencies
-      run: ./hack/scripts/deps.sh
+      run: ./deps.sh
 
     - name: Install Cosign
       uses: sigstore/cosign-installer@main
