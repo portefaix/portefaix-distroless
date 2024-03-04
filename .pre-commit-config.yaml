@@ -71,25 +71,11 @@ repos:
     - --comment-style
     - '{{/*||*/}}'
     # - --remove-header
-- repo: https://github.com/anderseknert/pre-commit-opa
-  rev: v1.5.1
+- repo: https://github.com/spinergie/pre-commit-dprint
+  rev: v0.42.5
   hooks:
-  - id: opa-fmt
-  - id: opa-check
-    args: ['addons/policies/core']
-  - id: opa-test
-    args: ['addons/policies/core']
-#   - id: conftest-test
-#     args: ['--policy', 'addons/policies/core']
-  - id: conftest-verify
-    args: ['--data', 'addons/policies/core']
-# - repo: https://github.com/kyverno/pre-commit-hook
-#   rev: v1.0.0
-#   hooks:
-#     - id: kyverno-test
-#       args: ["kyverno-policies"]
-#     - id: kyverno-validate
-#       args: ["kyverno-policies"]
+  - id: dprint
+    pass_filenames: false
 - repo: https://github.com/jumanjihouse/pre-commit-hooks
   rev: 3.0.0
   hooks:

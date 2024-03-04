@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,37 +16,18 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
----
-# labels to be used with /area command
-area:
-- 'github'
-- 'distroless'
+[ -n "$1" ] && exec "$@"
 
-kind:
-- 'bug'
-- 'documentation'
-- 'discussion'
-- 'feature'
-- 'question'
-- 'support'
+cat <<EOF
 
-priority:
-- backlog
-- 'low'
-- 'medium'
-- 'high'
-- 'critical'
+ ______                       ___      _
+(_____ \           _         / __)    (_)              kubectl: ${KUBECTL_VERSION}
+ _____) )__   ____| |_  ____| |__ ____ _ _   _         helm: ${HELM_VERSION}
+|  ____/ _ \ / ___)  _)/ _  )  __) _  | ( \ / )        kustomize: ${KUSTOMIZE_VERSION}
+| |   | |_| | |   | |_( (/ /| | ( ( | | |) X (
+|_|    \___/|_|    \___)____)_|  \_||_|_(_/ \_)
 
-status:
-- available
-- blocked
-- in_progress
-- on_hold
+Home: https://github.com/portefaix/portefaix-distroless
 
-# File globs for PR labeler
-# tests:
-#   - '**/*.test.ts'
-
-'area/distroless':
-- melange.yaml
-- apko.yaml
+EOF
+exec /bin/sh

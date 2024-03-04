@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,37 +16,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
----
-# labels to be used with /area command
-area:
-- 'github'
-- 'distroless'
+set -feu -o pipefail
 
-kind:
-- 'bug'
-- 'documentation'
-- 'discussion'
-- 'feature'
-- 'question'
-- 'support'
+reset_color="\\e[0m"
+color_red="\\e[31m"
+color_green="\\e[32m"
+color_blue="\\e[36m"
 
-priority:
-- backlog
-- 'low'
-- 'medium'
-- 'high'
-- 'critical'
-
-status:
-- available
-- blocked
-- in_progress
-- on_hold
-
-# File globs for PR labeler
-# tests:
-#   - '**/*.test.ts'
-
-'area/distroless':
-- melange.yaml
-- apko.yaml
+function echo_fail { echo -e "${color_red}✖ $*${reset_color}"; }
+function echo_success { echo -e "${color_green}✔ $*${reset_color}"; }
+function echo_info { echo -e "${color_blue}$*${reset_color}"; }
