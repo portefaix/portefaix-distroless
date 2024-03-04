@@ -98,7 +98,6 @@ jobs:
         archs: ${{ env.ARCHS }}
         tag: ${{ steps.meta.outputs.tags }}
         keyring-append: /work/melange.rsa.pub
-        image_refs: apko.images
         automount-dest: /work
 
     - name: Load image from apko-produced tarball
