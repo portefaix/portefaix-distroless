@@ -55,6 +55,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Populate workspace
+      shell: bash
+      run: |
+        shopt -s dotglob && tmp="$(mktemp -d)" \
+          && mv ${{ inputs.variant }}/* ${tmp}/ \
+          && echo ".github/" >> .melangeignore && tree -a . \
+          && sudo rm -rf /work && sudo mkdir /work
+
     - name: Setup QEMU
       uses: docker/setup-qemu-action@v3.0.0
 
@@ -78,18 +86,27 @@ jobs:
       uses: chainguard-dev/actions/melange-build@main
       with:
         config: melange.yaml
-        sign-with-temporary-key: true
         archs: ${{ env.ARCHS }}
+        signing-key-path: /work/melange.rsa
+        repository-path: /work/packages
+        empty-workspace: false
+        sign-with-temporary-key: true
 
     - name: Run Apko
       uses: chainguard-images/actions/apko-build@main
       id: apko-build
       with:
         config: apko.yaml
+        archs: ${{ env.ARCHS }}
         tag: ${{ steps.meta.outputs.tags }}
         keyring-append: /work/melange.rsa.pub
         image_refs: apko.images
-        archs: ${{ env.ARCHS }}
+        automount-dest: /work
+
+    - name: Load image from apko-produced tarball
+      shell: bash
+      run: |
+        docker load < output.tar
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
