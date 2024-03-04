@@ -72,7 +72,7 @@ repos:
     - '{{/*||*/}}'
     # - --remove-header
 - repo: https://github.com/spinergie/pre-commit-dprint
-  rev: v0.42.5
+  rev: v0.45.0
   hooks:
   - id: dprint
     pass_filenames: false
