@@ -49,7 +49,7 @@ rm -fr ${DEPS} && mkdir -p ${DEPS}
 
 for arch in $ARCHS; do
     echo_info "[portefaix-distroless] Download Kubectl ${arch} ..."
-    curl -sL "https://dl.k8s.io/v${KUBECTL_VERSION}/bin/darwin/amd64/kubectl" -o "${DEPS}/kubectl-${arch}"
+    curl -sL "https://dl.k8s.io/v${KUBECTL_VERSION}/bin/linux/${arch}/kubectl" -o "${DEPS}/kubectl-${arch}"
 
     echo_info "[portefaix-distroless] Download Helm ${arch} ..."
     curl -fsL "https://get.helm.sh/helm-${HELM_VERSION}-linux-${arch}.tar.gz" | tar xz
