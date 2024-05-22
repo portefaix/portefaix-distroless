@@ -58,6 +58,7 @@ pipeline:
     install -D ${DEPS}/kubectl-${ARCH} ${{targets.destdir}}/usr/bin/kubectl
     install -D ${DEPS}/helm-${ARCH} ${{targets.destdir}}/usr/bin/helm
     install -D ${DEPS}/kustomize-${ARCH} ${{targets.destdir}}/usr/bin/kustomize
+    install -D ${DEPS}/jq-${ARCH} ${{targets.destdir}}/usr/bin/jq
     install -D ${DEPS}/yq-${ARCH} ${{targets.destdir}}/usr/bin/yq
     # install -D ${DEPS}/kubeval-${ARCH} ${{targets.destdir}}/usr/bin/kubeval
     # install -D ${DEPS}/kubeconform-${ARCH} ${{targets.destdir}}/usr/bin/kubeconform

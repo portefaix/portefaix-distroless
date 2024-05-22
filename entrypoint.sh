@@ -20,20 +20,13 @@
 
 cat <<EOF
 
-KUBECTL_VERSION=$(kubectl version -client | jq -r '.clientVersion.gitVersion')
-KUSTOMIZE_VERSION=$(kustomize version)
-HELM_VERSION=$(helm version --template "{{.Version}}")
-JQ_VERSION=$(jq --version)
-YQ_VERSION=$(yq --version)
-JB_VERSION=$(jb --version)
-
  ______                       ___      _
-(_____ \           _         / __)    (_)              kubectl:   ${KUBECTL_VERSION}
- _____) )__   ____| |_  ____| |__ ____ _ _   _         helm:      ${HELM_VERSION}
-|  ____/ _ \ / ___)  _)/ _  )  __) _  | ( \ / )        kustomize: ${KUSTOMIZE_VERSION}
-| |   | |_| | |   | |_( (/ /| | ( ( | | |) X (         jq:        ${JQ_VERSION}
-|_|    \___/|_|    \___)____)_|  \_||_|_(_/ \_)        yq:        ${YQ_VERSION}
-                                                       jb:        ${JB_VERSION}
+(_____ \           _         / __)    (_)              kubectl:   $(kubectl version --client -o json | jq -r '.clientVersion.gitVersion')
+ _____) )__   ____| |_  ____| |__ ____ _ _   _         helm:      $(helm version --template "{{.Version}}")
+|  ____/ _ \ / ___)  _)/ _  )  __) _  | ( \ / )        kustomize: $(kustomize version)
+| |   | |_| | |   | |_( (/ /| | ( ( | | |) X (         jq:        $(jq --version)
+|_|    \___/|_|    \___)____)_|  \_||_|_(_/ \_)        yq:        $(yq --version)
+                                                       jb:        $(jb --version)
 
 Home: https://github.com/portefaix/portefaix-distroless
 
