@@ -26,7 +26,6 @@ cat <<EOF
 |  ____/ _ \ / ___)  _)/ _  )  __) _  | ( \ / )        kustomize: $(kustomize version)
 | |   | |_| | |   | |_( (/ /| | ( ( | | |) X (         jq:        $(jq --version)
 |_|    \___/|_|    \___)____)_|  \_||_|_(_/ \_)        yq:        $(yq --version)
-                                                       jb:        $(jb --version)
 
 Home: https://github.com/portefaix/portefaix-distroless
 
