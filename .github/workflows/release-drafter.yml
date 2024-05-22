@@ -21,7 +21,7 @@ on: # yamllint disable-line rule:truthy
   push:
     # branches to consider in the event; optional, defaults to all
     branches:
-    - master
+    - main
 
 jobs:
   update_release_draft:
