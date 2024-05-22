@@ -21,11 +21,11 @@
 cat <<EOF
 
  ______                       ___      _
-(_____ \           _         / __)    (_)              kubectl: ${KUBECTL_VERSION}
- _____) )__   ____| |_  ____| |__ ____ _ _   _         helm: ${HELM_VERSION}
-|  ____/ _ \ / ___)  _)/ _  )  __) _  | ( \ / )        kustomize: ${KUSTOMIZE_VERSION}
-| |   | |_| | |   | |_( (/ /| | ( ( | | |) X (
-|_|    \___/|_|    \___)____)_|  \_||_|_(_/ \_)
+(_____ \           _         / __)    (_)              kubectl:   $(kubectl version --client -o json | jq -r '.clientVersion.gitVersion')
+ _____) )__   ____| |_  ____| |__ ____ _ _   _         helm:      $(helm version --template "{{.Version}}")
+|  ____/ _ \ / ___)  _)/ _  )  __) _  | ( \ / )        kustomize: $(kustomize version)
+| |   | |_| | |   | |_( (/ /| | ( ( | | |) X (         jq:        $(jq --version)
+|_|    \___/|_|    \___)____)_|  \_||_|_(_/ \_)        yq:        $(yq --version)
 
 Home: https://github.com/portefaix/portefaix-distroless
 

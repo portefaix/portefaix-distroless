@@ -53,13 +53,15 @@ pipeline:
       "x86_64") ARCH="amd64" ;;
       "aarch64") ARCH="arm64" ;;
     esac
+    DEPS="deps"
     install -D entrypoint.sh ${{targets.destdir}}/usr/bin/entrypoint.sh
-    install -D kubectl-${ARCH} ${{targets.destdir}}/usr/bin/kubectl
-    install -D helm-${ARCH} ${{targets.destdir}}/usr/bin/helm
-    install -D kustomize-${ARCH} ${{targets.destdir}}/usr/bin/kustomize
-    install -D yq-${ARCH} ${{targets.destdir}}/usr/bin/yq
-    install -D kubeval-${ARCH} ${{targets.destdir}}/usr/bin/kubeval
-    install -D kubeconform-${ARCH} ${{targets.destdir}}/usr/bin/kubeconform
-    install -D opa-${ARCH} ${{targets.destdir}}/usr/bin/opa
-    install -D conftest-${ARCH} ${{targets.destdir}}/usr/bin/conftest
-    install -D jb-${ARCH} ${{targets.destdir}}/usr/bin/jb
+    install -D ${DEPS}/kubectl-${ARCH} ${{targets.destdir}}/usr/bin/kubectl
+    install -D ${DEPS}/helm-${ARCH} ${{targets.destdir}}/usr/bin/helm
+    install -D ${DEPS}/kustomize-${ARCH} ${{targets.destdir}}/usr/bin/kustomize
+    install -D ${DEPS}/jq-${ARCH} ${{targets.destdir}}/usr/bin/jq
+    install -D ${DEPS}/yq-${ARCH} ${{targets.destdir}}/usr/bin/yq
+    # install -D ${DEPS}/kubeval-${ARCH} ${{targets.destdir}}/usr/bin/kubeval
+    # install -D ${DEPS}/kubeconform-${ARCH} ${{targets.destdir}}/usr/bin/kubeconform
+    # install -D ${DEPS}/opa-${ARCH} ${{targets.destdir}}/usr/bin/opa
+    # install -D ${DEPS}/conftest-${ARCH} ${{targets.destdir}}/usr/bin/conftest
+    install -D ${DEPS}/jb-${ARCH} ${{targets.destdir}}/usr/bin/jb
