@@ -21,25 +21,25 @@ set -feu -o pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 source "${SCRIPT_DIR}/hack/scripts/commons.sh"
 
-# datasource=github-tags depName=github.com/kubernetes/kubectl
+# renovate: datasource=github-tags depName=github.com/kubernetes/kubectl
 KUBECTL_VERSION="1.30.1"
-# datasource=github-tags depName=github.com/helm/helm
+# renovate: datasource=github-tags depName=github.com/helm/helm
 HELM_VERSION="v3.11.3"
-# datasource=github-tags depName=kubernetes-sigs/kustomize
+# renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION="v5.0.1"
-# datasource=github-tags depName=jqlang/jq
+# renovate: datasource=github-tags depName=jqlang/jq
 JQ_VERSION="1.7.1"
-# datasource=github-tags depName=mikefarah/yq
+# renovate: datasource=github-tags depName=mikefarah/yq
 YQ_VERSION="v4.6.1"
-# datasource=github-tags depName=instrumenta/kubeval
+# renovate: datasource=github-tags depName=instrumenta/kubeval
 # KUBEVAL_VERSION="0.15.0"
-# datasource=github-tags depName=yannh/kubeconform
+# renovate: datasource=github-tags depName=yannh/kubeconform
 # KUBECONFORM_VERSION="v0.4.12"
-# datasource=github-tags depName=open-policy-agent/opa
+# renovate: datasource=github-tags depName=open-policy-agent/opa
 # OPA_VERSION="v0.28.0"
-# datasource=github-tags depName=open-policy-agent/conftest
+# renovate: datasource=github-tags depName=open-policy-agent/conftest
 # CONFTEST_VERSION="0.25.0"
-# datasource=github-tags depName=jsonnet-bundler/jsonnet-bundler
+# renovate: datasource=github-tags depName=jsonnet-bundler/jsonnet-bundler
 JB_VERSION="v0.4.0"
 
 ARCHS="amd64 arm64"

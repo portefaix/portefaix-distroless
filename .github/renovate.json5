@@ -20,5 +20,16 @@
   "rebaseWhen": "conflicted",
   "assignees": ["@nlamirault"],
   "reviewersFromCodeOwners": true,
-  // "labels": ["kind/renovate", "lifecycle/active", "status/review_needed"],
+  "labels": ["kind/renovate", "lifecycle/active", "status/review_needed"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "deps.sh"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s.+_VERSION=(?<currentValue>.*)"
+      ],
+      // "datasourceTemplate": "docker"
+    },
 }
