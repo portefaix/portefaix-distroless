@@ -34,7 +34,7 @@ YQ_VERSION="v4.6.1"
 # renovate: datasource=github-tags depName=instrumenta/kubeval
 # KUBEVAL_VERSION="0.15.0"
 # renovate: datasource=github-tags depName=yannh/kubeconform
-# KUBECONFORM_VERSION="v0.4.12"
+# KUBECONFORM_VERSION=v0.6.7
 # renovate: datasource=github-tags depName=open-policy-agent/opa
 # OPA_VERSION="v0.28.0"
 # renovate: datasource=github-tags depName=open-policy-agent/conftest
