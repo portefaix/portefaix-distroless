@@ -38,7 +38,7 @@ YQ_VERSION="v4.6.1"
 # renovate: datasource=github-tags depName=open-policy-agent/opa
 # OPA_VERSION="v0.28.0"
 # renovate: datasource=github-tags depName=open-policy-agent/conftest
-# CONFTEST_VERSION="0.25.0"
+# CONFTEST_VERSION=v0.55.0
 # renovate: datasource=github-tags depName=jsonnet-bundler/jsonnet-bundler
 JB_VERSION="v0.4.0"
 
