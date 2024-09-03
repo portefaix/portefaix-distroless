@@ -32,7 +32,7 @@ JQ_VERSION="1.7.1"
 # renovate: datasource=github-tags depName=mikefarah/yq
 YQ_VERSION="v4.6.1"
 # renovate: datasource=github-tags depName=instrumenta/kubeval
-# KUBEVAL_VERSION="0.15.0"
+# KUBEVAL_VERSION=v0.16.1
 # renovate: datasource=github-tags depName=yannh/kubeconform
 # KUBECONFORM_VERSION="v0.4.12"
 # renovate: datasource=github-tags depName=open-policy-agent/opa
