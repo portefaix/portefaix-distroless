@@ -21,7 +21,7 @@ set -feu -o pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 source "${SCRIPT_DIR}/hack/scripts/commons.sh"
 
-# renovate: datasource=github-tags depName=github.com/kubernetes/kubectl
+# renovate: datasource=github-tags depName=kubernetes/kubernetes
 KUBECTL_VERSION="1.30.1"
 # renovate: datasource=github-tags depName=github.com/helm/helm
 HELM_VERSION="v3.11.3"
