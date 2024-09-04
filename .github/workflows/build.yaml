@@ -27,11 +27,13 @@ on: # yamllint disable-line rule:truthy
     - apko.yaml
     - melange.yaml
     - "hack/scripts/**"
+    - "deps.sh"
   push:
     paths:
     - apko.yaml
     - melange.yaml
     - "hack/scripts/**"
+    - "deps.sh"
 
 env:
   REGISTRY: ghcr.io
