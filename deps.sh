@@ -24,11 +24,11 @@ source "${SCRIPT_DIR}/hack/scripts/commons.sh"
 # renovate: datasource=github-tags depName=kubernetes/kubernetes
 KUBECTL_VERSION=v1.31.3
 # renovate: datasource=github-tags depName=github.com/helm/helm
-HELM_VERSION="v3.11.3"
+HELM_VERSION=v3.11.3
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION="v5.0.1"
+KUSTOMIZE_VERSION=v5.0.1
 # renovate: datasource=github-tags depName=jqlang/jq
-JQ_VERSION="1.7.1"
+JQ_VERSION=1.7.1
 # renovate: datasource=github-tags depName=mikefarah/yq
 YQ_VERSION=v4.44.5
 # renovate: datasource=github-tags depName=instrumenta/kubeval

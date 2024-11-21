@@ -39,7 +39,7 @@ check: check-docker ## Check requirements
 
 .PHONY: init
 init: ## Initialize environment
-	$(VENV)/bin/pre-commit install
+	@pre-commit install
 
 .PHONY: validate
 validate: ## Execute git-hooks

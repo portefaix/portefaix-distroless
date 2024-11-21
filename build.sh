@@ -24,9 +24,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 source "${SCRIPT_DIR}/hack/scripts/commons.sh"
 
-# echo_info "[portefaix-distroless] Download dependencies"
-# rm -fr packages
-# ${SCRIPT_DIR}/deps.sh
+echo_info "[portefaix-distroless] Download dependencies"
+rm -fr packages
+"${SCRIPT_DIR}/deps.sh"
 
 echo_info "[portefaix-distroless] Generate temporary key"
 test -f melange.rsa || docker run --rm -it --privileged \
