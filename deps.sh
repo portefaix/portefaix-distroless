@@ -30,7 +30,7 @@ KUSTOMIZE_VERSION=v5.0.1
 # renovate: datasource=github-tags depName=jqlang/jq
 JQ_VERSION=1.7.1
 # renovate: datasource=github-tags depName=mikefarah/yq
-YQ_VERSION=v4.44.6
+YQ_VERSION=v4.45.1
 # renovate: datasource=github-tags depName=instrumenta/kubeval
 # KUBEVAL_VERSION=v0.16.1
 # renovate: datasource=github-tags depName=yannh/kubeconform
