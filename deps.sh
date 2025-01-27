@@ -36,7 +36,7 @@ YQ_VERSION=v4.44.6
 # renovate: datasource=github-tags depName=yannh/kubeconform
 # KUBECONFORM_VERSION=v0.6.7
 # renovate: datasource=github-tags depName=open-policy-agent/opa
-# OPA_VERSION=v1.0.0
+# OPA_VERSION=v1.1.0
 # renovate: datasource=github-tags depName=open-policy-agent/conftest
 # CONFTEST_VERSION=v0.56.0
 # renovate: datasource=github-tags depName=jsonnet-bundler/jsonnet-bundler
