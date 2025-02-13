@@ -22,7 +22,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 source "${SCRIPT_DIR}/hack/scripts/commons.sh"
 
 # renovate: datasource=github-tags depName=kubernetes/kubernetes
-KUBECTL_VERSION=v1.32.0
+KUBECTL_VERSION=v1.32.2
 # renovate: datasource=github-tags depName=github.com/helm/helm
 HELM_VERSION=v3.11.3
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
