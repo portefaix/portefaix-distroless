@@ -21,11 +21,16 @@ on: # yamllint disable-line rule:truthy
   push:
     tags:
     - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version"
+        required: true
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  ARCHS: x86_64,aarch64,armv7
+  ARCHS: x86_64,aarch64
   FULCIO_URL: https://fulcio.sigstore.dev
   REKOR_URL: https://rekor.sigstore.dev
 
@@ -85,6 +90,22 @@ jobs:
       run: |
         rm -rf .apko-automount && cp -r /work .apko-automount
 
+    - name: Run Apko
+      uses: chainguard-images/actions/apko-build@main
+      id: apko-build
+      with:
+        config: apko.yaml
+        archs: ${{ env.ARCHS }}
+        tag: ${{ steps.meta.outputs.tags }}
+        keyring-append: /work/melange.rsa.pub
+        automount-src: .apko-automount/.
+        automount-dest: /work
+
+    - name: Load image from apko-produced tarball
+      shell: bash
+      run: |
+        docker load < output.tar
+
     - name: Run apko publish
       uses: chainguard-images/actions/apko-publish@main
       id: apko-publish
@@ -96,31 +117,12 @@ jobs:
         automount-src: .apko-automount/.
         automount-dest: /work
 
-    # - name: Log in to registry
-    #   uses: docker/login-action@v2
-    #   with:
-    #     registry: ${{ env.REGISTRY }}
-    #     username: ${{ github.actor }}
-    #     password: ${{ secrets.GITHUB_TOKEN }}
-
-    # - name: Sign the image
-    #   env:
-    #     COSIGN_EXPERIMENTAL: 'true'
-    #   run: |
-    #     cosign sign ${{ steps.apko-publish.outputs.digest }} \
-    #       --yes \
-    #       --fulcio-url ${{ env.FULCIO_URL }} \
-    #       --rekor-url ${{ env.REKOR_URL }} \
-    #       -a sha=${{ github.sha }} \
-    #       -a run_id=${{ github.run_id }} \
-    #       -a run_attempt=${{ github.run_attempt }}
-
-    # - name: Run Trivy vulnerability scanner
-    #   uses: aquasecurity/trivy-action@master
-    #   with:
-    #     scan-type: image
-    #     image-ref: ${{ steps.apko-publish.outputs.digest }}
-    #     format: table
-    #     exit-code: '1'
-    #     vuln-type: 'os,library'
-    #     severity: 'CRITICAL,HIGH'
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: image
+        image-ref: ${{ steps.apko-publish.outputs.digest }}
+        format: table
+        exit-code: '1'
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
