@@ -21,11 +21,6 @@ on: # yamllint disable-line rule:truthy
   push:
     tags:
     - 'v*'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Version"
-        required: true
 
 env:
   REGISTRY: ghcr.io
