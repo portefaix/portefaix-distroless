@@ -138,7 +138,7 @@ jobs:
       run: |
         echo "digest=$(crane digest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }})" >> $GITHUB_OUTPUT
         if [[ "${{ inputs.archs }}" == *"amd64"* ]]; then
-            digest-amd64=$(crane digest --platform=linux/amd64 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }})"
+            digest-amd64=$(crane digest --platform=linux/amd64 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }})
             echo digest-amd64=$digest-amd64 >> "$GITHUB_OUTPUT"
             echo $digest-amd64
         else
