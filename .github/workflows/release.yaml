@@ -123,7 +123,7 @@ jobs:
       with:
         config: apko.yaml
         archs: ${{ env.ARCHS }}
-        tag: ${{ github.ref_name }} # ${{ steps.meta.outputs.tags }}
+        tag: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }} # ${{ steps.meta.outputs.tags }}
         keyring-append: /work/melange.rsa.pub
         automount-src: .apko-automount/.
         automount-dest: /work
