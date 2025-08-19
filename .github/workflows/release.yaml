@@ -34,17 +34,22 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  publish:
     name: Release OCI image
 
     runs-on: ubuntu-latest
 
     # https://docs.github.com/en/actions/reference/authentication-in-a-workflow
     permissions:
+      actions: read
       attestations: write # need for Artifact Attestations
       contents: write     # to push chart release and create a release (helm/chart-releaser-action)
       id-token: write     # needed for keyless signing
       packages: write     # needed for ghcr access
+
+    outputs:
+      digest: ${{ steps.digest.outputs.digest }}
+      image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ steps.release-details.outputs.release_name }}
 
     steps:
     - uses: actions/checkout@v5
@@ -90,6 +95,12 @@ jobs:
       run: |
         rm -rf .apko-automount && cp -r /work .apko-automount
 
+    - name: Create SBOM directory
+      id: dir-sbom
+      shell: bash
+      run: |
+        mkdir -p ${{ github.workspace }}/sbom
+
     - name: Run Apko
       uses: chainguard-images/actions/apko-build@main
       id: apko-build
@@ -116,6 +127,107 @@ jobs:
         keyring-append: /work/melange.rsa.pub
         automount-src: .apko-automount/.
         automount-dest: /work
+        sbom-path: ${{ github.workspace }}/sbom
+
+    - name: Setup Crane
+      uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
+
+    - name: Get disgest
+      id: get-digest
+      shell: bash
+      run: |
+        echo "digest=$(crane digest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }})" >> $GITHUB_OUTPUT
+        if [[ "${{ inputs.archs }}" == *"amd64"* ]]; then
+            digest-amd64=$(crane digest --platform=linux/amd64 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }})"
+            echo digest-amd64=$digest-amd64 >> "$GITHUB_OUTPUT"
+            echo $digest-amd64
+        else
+            echo "digest-amd64=''" >> $GITHUB_OUTPUT
+        fi
+        if [[ "${{ inputs.archs }}" == *"arm64"* ]]; then
+            digest-arm64=$(crane digest --platform=linux/arm64 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }})
+            echo digest-arm64=$digest-arm64 >> "$GITHUB_OUTPUT"
+            echo $digest-arm64
+        else
+          echo "digest-arm64=''" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Install cosign
+      uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3.9.1
+
+    - name: Use Cosign to sign image
+      id: cosign-sign
+      shell: bash
+      env:
+        COSIGN_YES: "true"
+      run: |
+        artifact_digest_uri="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.get-digest.outputs.digest }}"
+        cosign sign \
+          --recursive \
+          --oidc-provider=github-actions \
+          "${artifact_digest_uri}"
+        cosign verify "${artifact_digest_uri}" \
+            --certificate-identity-regexp "https://github.com/${{ github.repository }}/*" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com
+        echo cosign verify "${artifact_digest_uri}" \
+            --certificate-identity-regexp "https://github.com/${{ github.repository }}/*" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com
+
+    # - name: Sign image
+    #   shell: bash
+    #   env:
+    #     COSIGN_YES: "true"
+    #   run: |
+    #     cosign sign \
+    #       --recursive \
+    #       --oidc-provider=github-actions \
+    #       ${{ steps.vars.outputs.registry }}/${{ inputs.repository }}@${{ steps.digest.outputs.digest }}
+    #
+    - name: Use Cosign to attest index SBOM
+      id: cosign-attest-index
+      shell: bash
+      env:
+        COSIGN_YES: "true"
+      run: |
+        artifact_digest_uri="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.get-digest.outputs.digest }}"
+        cosign attest \
+          --type=spdxjson \
+          --predicate=${{ github.workspace }}/sbom/sbom-index.spdx.json \
+          --oidc-provider=github-actions \
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.get-digest.outputs.digest }}
+
+    - if: steps.digest.outputs.digest-amd64 != ''
+      name: Use Cosign to attest amd64 SBOM
+      id: cosign-attest-amd64
+      shell: bash
+      env:
+        COSIGN_YES: "true"
+      run: |
+        cosign attest \
+          --type=spdxjson \
+          --predicate=${{ github.workspace }}/sbom/sbom-x86_64.spdx.json \
+          --oidc-provider=github-actions \
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.get-digest.outputs.digest-amd64 }}
+
+    - if: steps.digest.outputs.digest-arm64 != ''
+      name: Use Cosign to attest arm64 SBOM
+      id: cosign-attest-arm64
+      shell: bash
+      env:
+        COSIGN_YES: "true"
+      run: |
+        cosign attest \
+          --type=spdxjson \
+          --predicate=${{ github.workspace }}/sbom/sbom-aarch64.spdx.json \
+          --oidc-provider=github-actions \
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.get-digest.outputs.digest-arm64 }}
+
+    - name: Attest build provenance
+      uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+      with:
+        subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        subject-digest: ${{ steps.get-digest.outputs.digest }}
+        push-to-registry: true
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
@@ -126,3 +238,50 @@ jobs:
         exit-code: '1'
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
+
+  slsa:
+    needs:
+    - publish
+
+    permissions:
+      actions: read     # To read the workflow path.
+      id-token: write   # To sign the provenance.
+      packages: write   # To upload assets to release.
+
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.1.0
+    with:
+      image: ${{ needs.publish.outputs.image }}
+      digest: ${{ needs.publish.outputs.digest }}
+    secrets:
+      registry-username: ${{ github.actor }}
+      registry-password: ${{ secrets.GITHUB_TOKEN }}
+
+  verification-with-cosign:
+    needs:
+    - publish
+    - slsa
+    runs-on: ubuntu-latest
+
+    permissions: read-all
+
+    steps:
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3.9.1
+
+    - name: Verify image
+      env:
+        IMAGE: "${{ needs.publish.outputs.image }}"
+        DIGEST: ${{ needs.publish.outputs.digest }}
+      run: |
+        cosign verify-attestation \
+            --type slsaprovenance \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            --certificate-identity-regexp '^https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v[0-9]+.[0-9]+.[0-9]+$' \
+            $IMAGE@$DIGEST
