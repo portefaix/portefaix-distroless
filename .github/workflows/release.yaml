@@ -21,6 +21,7 @@ on: # yamllint disable-line rule:truthy
   push:
     tags:
     - 'v*'
+  workflow_dispatch:  # Allow manual triggering
 
 env:
   REGISTRY: ghcr.io
@@ -29,17 +30,21 @@ env:
   FULCIO_URL: https://fulcio.sigstore.dev
   REKOR_URL: https://rekor.sigstore.dev
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Release OCI image
+
     runs-on: ubuntu-latest
 
     # https://docs.github.com/en/actions/reference/authentication-in-a-workflow
     permissions:
-      contents: read
-      packages: write
-      # Required for keyless signing with fulcio
-      id-token: write
+      attestations: write # need for Artifact Attestations
+      contents: write     # to push chart release and create a release (helm/chart-releaser-action)
+      id-token: write     # needed for keyless signing
+      packages: write     # needed for ghcr access
 
     steps:
     - uses: actions/checkout@v5
