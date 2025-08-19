@@ -101,21 +101,21 @@ jobs:
       run: |
         mkdir -p ${{ github.workspace }}/sbom
 
-    - name: Run Apko
-      uses: chainguard-images/actions/apko-build@main
-      id: apko-build
-      with:
-        config: apko.yaml
-        archs: ${{ env.ARCHS }}
-        tag: ${{ steps.meta.outputs.tags }}
-        keyring-append: /work/melange.rsa.pub
-        automount-src: .apko-automount/.
-        automount-dest: /work
+    # - name: Run Apko
+    #   uses: chainguard-images/actions/apko-build@main
+    #   id: apko-build
+    #   with:
+    #     config: apko.yaml
+    #     archs: ${{ env.ARCHS }}
+    #     tag: ${{ steps.meta.outputs.tags }}
+    #     keyring-append: /work/melange.rsa.pub
+    #     automount-src: .apko-automount/.
+    #     automount-dest: /work
 
-    - name: Load image from apko-produced tarball
-      shell: bash
-      run: |
-        docker load < output.tar
+    # - name: Load image from apko-produced tarball
+    #   shell: bash
+    #   run: |
+    #     docker load < output.tar
 
     - name: Run apko publish
       uses: chainguard-images/actions/apko-publish@main
@@ -123,7 +123,7 @@ jobs:
       with:
         config: apko.yaml
         archs: ${{ env.ARCHS }}
-        tag: ${{ steps.meta.outputs.tags }}
+        tag: ${{ github.ref_name }} # ${{ steps.meta.outputs.tags }}
         keyring-append: /work/melange.rsa.pub
         automount-src: .apko-automount/.
         automount-dest: /work
