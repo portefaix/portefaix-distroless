@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
 # Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,70 +25,92 @@ repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v6.0.0
   hooks:
-  - id: check-merge-conflict
-  - id: debug-statements
-  - id: check-builtin-literals
-  - id: check-added-large-files
-  - id: check-executables-have-shebangs
-  - id: check-toml
-  - id: check-xml
-  # - id: check-yaml
-  #   args:
-  #   - '--allow-multiple-documents'
-  #   exclude: >
-  #     mkdocs.yml
-  #     gitops/argocd/charts/core/infra
-  #     gitops/argocd/charts/.*/.*/templates/*.*
-  - id: check-json
-  - id: detect-private-key
-  - id: end-of-file-fixer
-  - id: mixed-line-ending
   - id: trailing-whitespace
+    name: "📁 filesystem /📝 files - check whitespace"
+    stages: [pre-commit]
+  - id: end-of-file-fixer
+    name: "📁 filesystem /📝 files - check end of file"
+    stages: [pre-commit]
+  - id: check-added-large-files
+    name: "📁 filesystem /📝 files - check large files"
+    stages: [pre-commit]
+  - id: check-executables-have-shebangs
+    name: "📁 filesystem /⚙️ exec · Verify shebang presence"
+    stages: [pre-commit]
+  - id: check-shebang-scripts-are-executable
+    name: "📁 filesystem /⚙️ exec · Verify script permissions"
+    stages: [pre-commit]
+  - id: check-case-conflict
+    name: "📁 filesystem /📝 names · Check case sensitivity"
+    stages: [pre-commit]
+  - id: check-illegal-windows-names
+    name: "📁 filesystem /📝 names · Validate Windows filenames"
+    stages: [pre-commit]
+  - id: check-symlinks
+    name: "📁 filesystem /🔗 symlink · Check symlink validity"
+    stages: [pre-commit]
+  - id: destroyed-symlinks
+    name: "📁 filesystem /🔗 symlink · Detect broken symlinks"
+    stages: [pre-commit]
+  - id: check-merge-conflict
+    stages: [pre-commit]
+  - id: debug-statements
+    stages: [pre-commit]
+  - id: check-builtin-literals
+    stages: [pre-commit]
+  - id: detect-private-key
+    stages: [pre-commit]
+  - id: mixed-line-ending
+    stages: [pre-commit]
 - repo: https://github.com/compilerla/conventional-pre-commit
-  rev: v4.0.0
+  rev: v4.2.0
   hooks:
   - id: conventional-pre-commit
+    name: "✅ git / Validate commit message"
     stages: [commit-msg]
-    args: [] # optional: list of Conventional Commits types to allow e.g. [feat, fix, ci, chore, test]
-# - repo: https://github.com/gruntwork-io/pre-commit
-#   rev: v0.1.22
-#   hooks:
-#   - id: helmlint
+    args: [--strict, --force-scope, build, chore, ci, docs, refactor, perf, test]
 - repo: https://github.com/Lucas-C/pre-commit-hooks
   rev: v1.5.5
   hooks:
   - id: insert-license
-    files: (Makefile|Gemfile|\.mk|\.yaml|\.yml|\.tf|\.hcl|\.ini|\.rb|\.toml|\.sh)
+    name: "📄 license / Insert license header"
+    files: (Makefile|\.mk|\.yaml|\.yml|\.sh)
     exclude: ^\.secrets/.*$|^\.git-crypt/.*$
     args:
     - --license-filepath
-    - LICENSE
-    # - --remove-header
-  - id: insert-license
-    description: Insert license header into Jinja templates
-    files: (\.tpl)
-    exclude: ^\.secrets/.*$|^\.git-crypt/.*$
-    args:
-    - --license-filepath
-    - LICENSE
-    - --comment-style
-    - '{{/*||*/}}'
+    - hack/LICENSE
     # - --remove-header
 - repo: https://github.com/spinergie/pre-commit-dprint
   rev: v0.50.1
   hooks:
   - id: dprint
+    name: "📝 formatting / Format with dprint"
     pass_filenames: false
 - repo: https://github.com/jumanjihouse/pre-commit-hooks
   rev: 3.0.0
   hooks:
   - id: shellcheck
+    name: "🐚 shell / Lint shell scripts"
     exclude: hack/hooks/pre-commit.git-crypt.sh
   - id: shfmt
+    name: "🐚 shell / Format shell scripts"
     args: ["-i 4"]
-- repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.36.2
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.33.2
   hooks:
-  - id: yamllint
-    # exclude:
-    #   ^gitops/(?:templates|files)/.*\.yaml
+  - id: check-renovate
+    name: "✅ renovate / Validate Renovate configuration"
+    stages: [pre-commit]
+    additional_dependencies: ["json5"]
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.33.2
+  hooks:
+  - id: check-github-actions
+    name: "✅ github-actions / Validate Github Actions configuration"
+    stages: [pre-commit]
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.33.2
+  hooks:
+  - id: check-github-workflows
+    name: "✅ github-actions / Validate Github Actions workflow"
+    stages: [pre-commit]
