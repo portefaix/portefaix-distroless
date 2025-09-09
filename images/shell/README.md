@@ -4,10 +4,10 @@ Container image with Bash and tooling including `curl`, `netcat`, `jq`, `yq`.
 
 ## Versions
 
-| 📌 Version | ⬇️ Pull URL                                                |
-| ---------- | --------------------------------------------------------- |
-| latest     | ghcr.io//portefaix/portefaix-/distroless/shell:latest     |
-| latest-dev | ghcr.io//portefaix/portefaix-/distroless/shell:latest-dev |
+| 📌 Version | ⬇️ Pull URL                                               |
+| ---------- | -------------------------------------------------------- |
+| latest     | ghcr.io/portefaix/portefaix-/distroless/shell:latest     |
+| latest-dev | ghcr.io/portefaix/portefaix-/distroless/shell:latest-dev |
 
 ## ✅ Verify the Provenance
 
@@ -20,7 +20,7 @@ the image:
 ```shell
 gh attestation verify \
   --owner /portefaix \
-  oci://ghcr.io//portefaix/portefaix-/distroless/shell:latest
+  oci://ghcr.io/portefaix/portefaix-/distroless/shell:latest
 ```
 
 - **Shell image**
@@ -28,5 +28,5 @@ gh attestation verify \
 ```shell
 gh attestation verify \
   --owner /portefaix \
-  oci://ghcr.io//portefaix/portefaix-/distroless/shell:latest-shell
+  oci://ghcr.io/portefaix/portefaix-/distroless/shell:latest-shell
 ```

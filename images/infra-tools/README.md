@@ -22,10 +22,10 @@ operations.
 
 ## Versions
 
-| 📌 Version | ⬇️ Pull URL                                                       |
-| ---------- | ---------------------------------------------------------------- |
-| latest     | ghcr.io//portefaix/portefaix-distroless/infra-tools:latest       |
-| latest-dev | ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-shell |
+| 📌 Version | ⬇️ Pull URL                                                      |
+| ---------- | --------------------------------------------------------------- |
+| latest     | ghcr.io/portefaix/portefaix-distroless/infra-tools:latest       |
+| latest-dev | ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-shell |
 
 ## ✅ Verify the Build Provenance
 
@@ -40,7 +40,7 @@ the image:
 ```shell
 gh attestation verify \
   --owner nlamirault \
-  oci://ghcr.io//portefaix/portefaix-distroless/infra-tools:latest
+  oci://ghcr.io/portefaix/portefaix-distroless/infra-tools:latest
 ```
 
 - **Shell image**
@@ -48,7 +48,7 @@ gh attestation verify \
 ```shell
 gh attestation verify \
   --owner nlamirault \
-  oci://ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-shell
+  oci://ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-shell
 ```
 
 - **Dev image**
@@ -56,7 +56,7 @@ gh attestation verify \
 ```shell
 gh attestation verify \
   --owner nlamirault \
-  oci://ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-dev
+  oci://ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-dev
 ```
 
 ### Using Cosign
@@ -102,7 +102,7 @@ following command:
 cosign verify \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
   --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
-  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest | jq
+  ghcr.io/portefaix/portefaix-distroless/infra-tools:latest | jq
 ```
 
 - **Shell image**
@@ -111,7 +111,7 @@ cosign verify \
 cosign verify \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
   --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
-  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-shell | jq
+  ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-shell | jq
 ```
 
 - **Dev image**
@@ -120,7 +120,7 @@ cosign verify \
 cosign verify \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
   --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
-  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-dev | jq
+  ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-dev | jq
 ```
 
 ## ✅ Verify the Image Attestations
@@ -136,7 +136,7 @@ cosign verify-attestation \
   --type=https://spdx.dev/Document \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
   --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
-  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest
+  ghcr.io/portefaix/portefaix-distroless/infra-tools:latest
 ```
 
 - **Shell image**
@@ -146,7 +146,7 @@ cosign verify-attestation \
   --type=https://spdx.dev/Document \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
   --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
-  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-shell
+  ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-shell
 ```
 
 This will pull in the signature for the attestation specified by the --type
@@ -165,7 +165,7 @@ following command will obtain the SBOM for the python image on `linux/amd64`:
 cosign download attestation \
   --platform=linux/amd64 \
   --predicate-type=https://spdx.dev/Document \
-  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest | jq -r .payload | base64 -d | jq .predicate
+  ghcr.io/portefaix/portefaix-distroless/infra-tools:latest | jq -r .payload | base64 -d | jq .predicate
 ```
 
 - **Shell image**
@@ -174,5 +174,5 @@ cosign download attestation \
 cosign download attestation \
   --platform=linux/amd64 \
   --predicate-type=https://spdx.dev/Document \
-  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-shell | jq -r .payload | base64 -d | jq .predicate
+  ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-shell | jq -r .payload | base64 -d | jq .predicate
 ```
