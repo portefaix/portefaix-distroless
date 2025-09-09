@@ -7,10 +7,12 @@ include: images/apko.yaml
 contents:
   keyring:
   - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
-  - ./melange.rsa.pub
+  - /work/keys/melange.rsa.pub
   repositories:
   - https://packages.wolfi.dev/os
   - "@local /work/packages"
+  # repositories:
+  # - packages
   packages:
   - aws-cli-v2
   - bash
@@ -34,11 +36,11 @@ contents:
   - opentofu
   - yq
   # Local
-  - jb@local
+  - jsonnet-bundler@local
 
 cmd: /usr/bin/sh -l
 
 annotations:
   org.opencontainers.image.title: "infra-tools"
   org.opencontainers.image.description: "infra-tools image based on Wolfi OS"
-  org.opencontainers.image.source: "https://github.com/portefaix/portefaix-distroless/tree/main/images/infra-tools"
+  org.opencontainers.image.source: "https://github.com/nlamirault/distroless/tree/main/images/infra-tools"

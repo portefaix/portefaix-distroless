@@ -3,10 +3,10 @@
 
 ---
 package:
-  name: jq
+  name: jsonnet-bundler
   version: 0.6.0
-  epoch: 2
-  description: Json Builder
+  epoch: 1
+  description: A package manager for Jsonnet
   copyright:
   - license: Apache-2.0
   target-architecture:
@@ -23,19 +23,14 @@ environment:
     - ca-certificates-bundle
     - busybox
     - curl
-    # - build-base
-    # - wolfi-base
-    # - wolfi-baselayout
 
 vars:
   jb-version: "v0.6.0"
 
 pipeline:
-- name: Install binary
+- name: Install jsonnet-bundler binary
   runs: |
     set -x
-
-    JB_VERSION=v0.6.0
 
     ARCH=$(uname -m)
     case $ARCH in
@@ -46,7 +41,7 @@ pipeline:
     EXEC_DIR="${{targets.destdir}}/usr/bin"
     mkdir -p "${EXEC_DIR}"
 
-    curl -sL "https://github.com/jsonnet-bundler/jsonnet-bundler/releases/download/${{vars.jb-version}}/jb-linux-amd64" -o "${EXEC_DIR}/jb"
+    curl -sL "https://github.com/jsonnet-bundler/jsonnet-bundler/releases/download/${{vars.jb-version}}/jb-linux-${ARCH}" -o "${EXEC_DIR}/jb"
     chmod +x "${EXEC_DIR}/jb"
 
 update:

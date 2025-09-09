@@ -30,4 +30,4 @@ annotations:
   org.opencontainers.image.issue-tracker: "https://github.com/portefaix/portefaix-distroless/issues"
   org.opencontainers.image.licenses: "Apache-2.0"
   org.opencontainers.image.source: "https://github.com/portefaix/portefaix-distroless"
-  org.opencontainers.image.vendor: "Nicolas Lamirault"
+  org.opencontainers.image.vendor: "Portefaix"

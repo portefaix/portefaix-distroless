@@ -1,13 +1,31 @@
 # infra-tools
 
-This image contains all infra tools.
+This image contains infrastructure tools for cloud-native development and
+operations.
+
+## Included Tools
+
+- **AWS CLI v2** - Amazon Web Services command line interface
+- **Cosign** - Container signing and verification
+- **Crane** - Container registry manipulation
+- **Docker CLI** with Buildx - Container building and management
+- **Git** - Version control system
+- **Grype** - Vulnerability scanner
+- **Helm** with Helm Docs - Kubernetes package manager
+- **jq/yq** - JSON/YAML processors
+- **jsonnet-bundler (jb)** - Jsonnet package manager
+- **kubectl** - Kubernetes command line tool
+- **Kustomize** - Kubernetes configuration management
+- **OpenTofu** - Infrastructure as Code tool
+- **OpenSSH Client** - Secure shell client
+- **OpenSSL** - Cryptography toolkit
 
 ## Versions
 
-| 📌 Version | ⬇️ Pull URL                                                      |
-| ---------- | --------------------------------------------------------------- |
-| latest     | ghcr.io/portefaix/portefaix-distroless/infra-tools:latest       |
-| latest-dev | ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-shell |
+| 📌 Version | ⬇️ Pull URL                                                       |
+| ---------- | ---------------------------------------------------------------- |
+| latest     | ghcr.io//portefaix/portefaix-distroless/infra-tools:latest       |
+| latest-dev | ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-shell |
 
 ## ✅ Verify the Build Provenance
 
@@ -22,7 +40,7 @@ the image:
 ```shell
 gh attestation verify \
   --owner nlamirault \
-  oci://ghcr.io/nlamirault/distroless/infra-tools:latest
+  oci://ghcr.io//portefaix/portefaix-distroless/infra-tools:latest
 ```
 
 - **Shell image**
@@ -30,7 +48,7 @@ gh attestation verify \
 ```shell
 gh attestation verify \
   --owner nlamirault \
-  oci://ghcr.io/nlamirault/distroless/infra-tools:latest-shell
+  oci://ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-shell
 ```
 
 - **Dev image**
@@ -38,7 +56,7 @@ gh attestation verify \
 ```shell
 gh attestation verify \
   --owner nlamirault \
-  oci://ghcr.io/nlamirault/distroless/infra-tools:latest-dev
+  oci://ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-dev
 ```
 
 ### Using Cosign
@@ -50,7 +68,6 @@ cosign verify-attestation \
  --type slsaprovenance \
  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
  --certificate-identity-regexp '^https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v[0-9]+.[0-9]+.[0-9]+$' \
- ghcr.io/nlamirault/distroless/infra-tools:latest@sha256:ce146eca0f43355cc4f4cc1004e66743a64d979034cee9fd657f2966358ce7bd
 ```
 
 - **Shell image**
@@ -60,7 +77,6 @@ cosign verify-attestation \
   --type slsaprovenance \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
   --certificate-identity-regexp '^https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v[0-9]+.[0-9]+.[0-9]+$' \
-  ghcr.io/nlamirault/distroless/infra-tools:latest-shell@sha256:013e1628964880663cfbbe9db8d6a0e6b6e8a725920594359674e8c19d93c4f7
 ```
 
 - **Dev image**
@@ -70,7 +86,6 @@ cosign verify-attestation \
   --type slsaprovenance \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
   --certificate-identity-regexp '^https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v[0-9]+.[0-9]+.[0-9]+$' \
-  ghcr.io/nlamirault/distroless/infra-tools:latest-dev@sha256:e6c26b534f457aad355c223bab8171af2a80ba3f354b58b8b2bfaefd29965394
 ```
 
 ## ✅ Verify the Image Signature
@@ -86,8 +101,8 @@ following command:
 ```shell
 cosign verify \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-  --certificate-identity=https://github.com/nlamirault/distroless/.github/workflows/release.yaml@refs/heads/main \
-  ghcr.io/nlamirault/distroless/infra-tools:latest | jq
+  --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
+  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest | jq
 ```
 
 - **Shell image**
@@ -95,8 +110,8 @@ cosign verify \
 ```shell
 cosign verify \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-  --certificate-identity=https://github.com/nlamirault/distroless/.github/workflows/release.yaml@refs/heads/main \
-  ghcr.io/nlamirault/distroless/infra-tools:latest-shell | jq
+  --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
+  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-shell | jq
 ```
 
 - **Dev image**
@@ -104,8 +119,8 @@ cosign verify \
 ```shell
 cosign verify \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-  --certificate-identity=https://github.com/nlamirault/distroless/.github/workflows/release.yaml@refs/heads/main \
-  ghcr.io/nlamirault/distroless/infra-tools:latest-dev | jq
+  --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
+  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-dev | jq
 ```
 
 ## ✅ Verify the Image Attestations
@@ -120,8 +135,8 @@ directly from the container registry and can be verified using using
 cosign verify-attestation \
   --type=https://spdx.dev/Document \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-  --certificate-identity=https://github.com/nlamirault/distroless/.github/workflows/release.yaml@refs/heads/main \
-  ghcr.io/nlamirault/distroless/infra-tools:latest
+  --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
+  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest
 ```
 
 - **Shell image**
@@ -130,8 +145,8 @@ cosign verify-attestation \
 cosign verify-attestation \
   --type=https://spdx.dev/Document \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-  --certificate-identity=https://github.com/nlamirault/distroless/.github/workflows/release.yaml@refs/heads/main \
-  ghcr.io/nlamirault/distroless/infra-tools:latest-shell
+  --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
+  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-shell
 ```
 
 This will pull in the signature for the attestation specified by the --type
@@ -150,7 +165,7 @@ following command will obtain the SBOM for the python image on `linux/amd64`:
 cosign download attestation \
   --platform=linux/amd64 \
   --predicate-type=https://spdx.dev/Document \
-  ghcr.io/nlamirault/distroless/infra-tools:latest | jq -r .payload | base64 -d | jq .predicate
+  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest | jq -r .payload | base64 -d | jq .predicate
 ```
 
 - **Shell image**
@@ -159,5 +174,5 @@ cosign download attestation \
 cosign download attestation \
   --platform=linux/amd64 \
   --predicate-type=https://spdx.dev/Document \
-  ghcr.io/nlamirault/distroless/infra-tools:latest-shell | jq -r .payload | base64 -d | jq .predicate
+  ghcr.io//portefaix/portefaix-distroless/infra-tools:latest-shell | jq -r .payload | base64 -d | jq .predicate
 ```

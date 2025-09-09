@@ -11,7 +11,6 @@ on: # yamllint disable-line rule:truthy
         description: "Image repository"
         type: string
         required: false
-        # default: nlamirault/distroless/${{ github.workflow }}
       tag:
         description: "Image tag"
         type: string
@@ -65,13 +64,13 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
     - name: Setup Crane
       uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
 
     - name: Install cosign
-      uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3.9.1
+      uses: sigstore/cosign-installer@d58896d6a1865668819e1d91763c7751a165e159 # v3.9.2
 
     - name: Set Vars
       id: vars
@@ -91,7 +90,7 @@ jobs:
 
     - if: steps.vars.outputs.registry == 'ghcr.io'
       name: Login to GitHub Registry
-      uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
+      uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
@@ -103,21 +102,20 @@ jobs:
       run: |
         mkdir -p ${{ github.workspace }}/sbom
 
-    - if: ${{ hashFiles("${{ inputs.config-dir }}/melange.yaml") != '' }}
+    - if: hashFiles("${{ inputs.config-dir }}/melange.yaml") != ''
       name: Run Melange
-      uses: chainguard-dev/actions/melange-build@v1.0.0
+      uses: chainguard-dev/actions/melange-build@f632aec66edeebe245ad686a33a0c0a2160cac31 # v1.4.14
       with:
-        workdir: ${{ inputs.config-dir }}
-        config: melange.yaml
+        config: ${{ inputs.config-dir }}/melange.yaml
         archs: ${{ env.ARCHS }}
-        signing-key-path: /work/melange.rsa
-        repository-path: /work/packages
+        signing-key-path: ${{ github.workspace }}/keys/melange.rsa
+        repository-path: ${{ github.workspace }}/packages
         empty-workspace: false
         sign-with-temporary-key: true
 
     - name: Publish image
       id: apko
-      uses: chainguard-images/actions/apko-publish@v1.0.0
+      uses: distroless/actions/apko-publish@f632aec66edeebe245ad686a33a0c0a2160cac31 # v1.4.14
       with:
         config: ${{ inputs.config-dir }}/${{ inputs.target }}.yaml
         tag: ${{ steps.vars.outputs.image }}
@@ -193,7 +191,7 @@ jobs:
 
     - if: steps.vars.outputs.registry == 'ghcr.io'
       name: Attest build provenance
-      uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+      uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
       with:
         subject-name: ${{ steps.vars.outputs.registry }}/${{ inputs.repository }}
         subject-digest: ${{ steps.digest.outputs.digest }}
@@ -224,7 +222,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Scan image
       id: scan
