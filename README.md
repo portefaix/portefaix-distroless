@@ -7,9 +7,8 @@ A set of **lightweight and secure** container images based on the
 
 | Image Name                           | Pull                                        |
 | ------------------------------------ | ------------------------------------------- |
-| [infra-tools](./images/infra-tools/) | `docker pull ghcr.io/portefaix/infra-tools` |
 | [shell](./images/shell/)             | `docker pull ghcr.io/portefaix/shell`       |
-| [nginx](./images/nginx/)             | `docker pull ghcr.io/portefaix/nginx`       |
+| [infra-tools](./images/infra-tools/) | `docker pull ghcr.io/portefaix/infra-tools` |
 
 ## Contributing
 
