@@ -102,12 +102,12 @@ jobs:
       run: |
         mkdir -p ${{ github.workspace }}/sbom
 
-    - if: hashFiles("${{ inputs.config-dir }}/melange.yaml") != ''
+    - if: hashFiles(format('{0}/melange.yaml', inputs.config-dir)) != ''
       name: Run Melange
       uses: chainguard-dev/actions/melange-build@f632aec66edeebe245ad686a33a0c0a2160cac31 # v1.4.14
       with:
         config: ${{ inputs.config-dir }}/melange.yaml
-        archs: ${{ env.ARCHS }}
+        archs: ${{ inputs.archs }}
         signing-key-path: ${{ github.workspace }}/keys/melange.rsa
         repository-path: ${{ github.workspace }}/packages
         empty-workspace: false
