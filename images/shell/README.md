@@ -19,7 +19,7 @@ the image:
 
 ```shell
 gh attestation verify \
-  --owner /portefaix \
+  --owner portefaix \
   oci://ghcr.io/portefaix/portefaix-/distroless/shell:latest
 ```
 
@@ -27,6 +27,6 @@ gh attestation verify \
 
 ```shell
 gh attestation verify \
-  --owner /portefaix \
+  --owner portefaix \
   oci://ghcr.io/portefaix/portefaix-/distroless/shell:latest-shell
 ```
