@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
 # Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +19,9 @@
 
 ---
 # PR labels and the branch patterns they should be auto-assigned to
-kind/feature: ['feature/*', 'feat/*']
-kind/bug: ['fix/*', 'hot-fix/*', 'bug-fix/*']
-kind/documentation: ['documentation/*']
+kind/feature: ["feature/*", "feat/*"]
+kind/bug: ["fix/*", "hot-fix/*", "bug-fix/*"]
+kind/documentation: ["documentation/*"]
 
 # 🚀 kind/feature: ['feature/*', 'feat/*']
 # 🐛 kind/bug: ['fix/*', 'hot-fix/*', 'bug-fix/*']

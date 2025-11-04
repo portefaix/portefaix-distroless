@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
 # Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,23 +20,23 @@
 ---
 # labels to be used with /area command
 area:
-- 'github'
-- 'distroless'
+- "github"
+- "distroless"
 
 kind:
-- 'bug'
-- 'documentation'
-- 'discussion'
-- 'feature'
-- 'question'
-- 'support'
+- "bug"
+- "documentation"
+- "discussion"
+- "feature"
+- "question"
+- "support"
 
 priority:
 - backlog
-- 'low'
-- 'medium'
-- 'high'
-- 'critical'
+- "low"
+- "medium"
+- "high"
+- "critical"
 
 status:
 - available
@@ -45,6 +48,6 @@ status:
 # tests:
 #   - '**/*.test.ts'
 
-'area/distroless':
+"area/distroless":
 - melange.yaml
 - apko.yaml
