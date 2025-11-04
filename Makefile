@@ -6,6 +6,12 @@ include hack/commons.mk
 SCRIPTS_DIR="."
 
 ARCH := $(shell uname -m)
+ifeq ($(ARCH),x86_64)
+  ARCH := amd64
+endif
+ifeq ($(ARCH),aarch64)
+  ARCH := arm64
+endif
 
 # ====================================
 # D E V E L O P M E N T

@@ -39,7 +39,7 @@ the image:
 
 ```shell
 gh attestation verify \
-  --owner nlamirault \
+  --owner portefaix \
   oci://ghcr.io/portefaix/portefaix-distroless/infra-tools:latest
 ```
 
@@ -47,7 +47,7 @@ gh attestation verify \
 
 ```shell
 gh attestation verify \
-  --owner nlamirault \
+  --owner portefaix \
   oci://ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-shell
 ```
 
@@ -55,7 +55,7 @@ gh attestation verify \
 
 ```shell
 gh attestation verify \
-  --owner nlamirault \
+  --owner portefaix \
   oci://ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-dev
 ```
 
