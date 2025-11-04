@@ -11,6 +11,7 @@ on: # yamllint disable-line rule:truthy
         description: "Image repository"
         type: string
         required: false
+        # default: nlamirault/distroless/${{ github.workflow }}
       tag:
         description: "Image tag"
         type: string
@@ -70,7 +71,7 @@ jobs:
       uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
 
     - name: Install cosign
-      uses: sigstore/cosign-installer@d58896d6a1865668819e1d91763c7751a165e159 # v3.9.2
+      uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
 
     - name: Set Vars
       id: vars
@@ -90,7 +91,7 @@ jobs:
 
     - if: steps.vars.outputs.registry == 'ghcr.io'
       name: Login to GitHub Registry
-      uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
+      uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
@@ -102,12 +103,22 @@ jobs:
       run: |
         mkdir -p ${{ github.workspace }}/sbom
 
-    - if: hashFiles(format('{0}/melange.yaml', inputs.config-dir)) != ''
+    - name: Check for melange.yaml
+      id: check-melange
+      shell: bash
+      run: |
+        if [ -f "${{ inputs.config-dir }}/melange.yaml" ]; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
+    - if: steps.check-melange.outputs.exists == 'true'
       name: Run Melange
-      uses: chainguard-dev/actions/melange-build@f632aec66edeebe245ad686a33a0c0a2160cac31 # v1.4.14
+      uses: chainguard-dev/actions/melange-build@1b32103f5aa389c31ab0be75a8edc38d7e4750d8 # v1.5.7
       with:
         config: ${{ inputs.config-dir }}/melange.yaml
-        archs: ${{ inputs.archs }}
+        archs: ${{ env.ARCHS }}
         signing-key-path: ${{ github.workspace }}/keys/melange.rsa
         repository-path: ${{ github.workspace }}/packages
         empty-workspace: false
@@ -115,7 +126,7 @@ jobs:
 
     - name: Publish image
       id: apko
-      uses: distroless/actions/apko-publish@f632aec66edeebe245ad686a33a0c0a2160cac31 # v1.4.14
+      uses: chainguard-images/actions/apko-publish@9fc710c7faed46f22e51e4e0e057c8ac0caa0fb3 # v1.0.7
       with:
         config: ${{ inputs.config-dir }}/${{ inputs.target }}.yaml
         tag: ${{ steps.vars.outputs.image }}
@@ -226,7 +237,7 @@ jobs:
 
     - name: Scan image
       id: scan
-      uses: anchore/scan-action@v6
+      uses: anchore/scan-action@v7
       with:
         image: ${{ needs.publish.outputs.image }}
         cache-db: true
@@ -235,7 +246,7 @@ jobs:
         #grype-version: v0.87.0
 
     - name: Upload SARIF
-      uses: github/codeql-action/upload-sarif@v3
+      uses: github/codeql-action/upload-sarif@v4
       with:
         sarif_file: ${{ steps.scan.outputs.sarif }}
         category: ${{ github.workflow }}
