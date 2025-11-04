@@ -1,36 +1,39 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base",
-    ":enablePreCommit",
-    ":gitSignOff",
-    "github>portefaix/.github//.github/renovate/autoMerge.json5",
-    "github>portefaix/.github//.github/renovate/commitMessage.json5",
-    "github>portefaix/.github//.github/renovate/labels.json5"
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+    ':enablePreCommit',
+    ':gitSignOff',
+    'github>portefaix/.github//.github/renovate/autoMerge.json5',
+    'github>portefaix/.github//.github/renovate/commitMessage.json5',
+    'github>portefaix/.github//.github/renovate/labels.json5',
   ],
-  "enabled": true,
-  "timezone": "Europe/Paris",
-  "dependencyDashboard": true,
-  "dependencyDashboardTitle": "Renovate Dashboard",
-  // "gitAuthor": "Nicolas Lamirault <nlamirault@users.noreply.github.com>",
-  // "commitBody": "Signed-off-by: Nicolas Lamirault <nlamirault@users.noreply.github.com>",
-  // Do not notify on closed unmerged PRs
-  "suppressNotifications": ["prIgnoreNotification"],
-  // Do not rebase PRs
-  "rebaseWhen": "conflicted",
-  "assignees": ["@nlamirault"],
-  "reviewersFromCodeOwners": true,
-  "labels": ["kind/renovate", "lifecycle/active", "status/review_needed"],
-  "customManagers": [
+  enabled: true,
+  timezone: 'Europe/Paris',
+  dependencyDashboard: true,
+  dependencyDashboardTitle: 'Renovate Dashboard',
+  suppressNotifications: [
+    'prIgnoreNotification',
+  ],
+  rebaseWhen: 'conflicted',
+  assignees: [
+    '@nlamirault',
+  ],
+  reviewersFromCodeOwners: true,
+  labels: [
+    'kind/renovate',
+    'lifecycle/active',
+    'status/review_needed',
+  ],
+  customManagers: [
     {
-      "customType": "regex",
-      "fileMatch": [
-        "deps.sh"
+      customType: 'regex',
+      managerFilePatterns: [
+        '/deps.sh/',
       ],
-      "matchStrings": [
-        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s.+_VERSION=(?<currentValue>.*)"
+      matchStrings: [
+        '# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s.+_VERSION=(?<currentValue>.*)',
       ],
-      // "datasourceTemplate": "docker"
-    }
-  ]
+    },
+  ],
 }
