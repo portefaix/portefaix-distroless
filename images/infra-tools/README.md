@@ -22,7 +22,7 @@ operations.
 
 ## Versions
 
-| 📌 Version | ⬇️ Pull URL                                                      |
+| 📌 Version | ⬇️ Pull URL                                                     |
 | ---------- | --------------------------------------------------------------- |
 | latest     | ghcr.io/portefaix/portefaix-distroless/infra-tools:latest       |
 | latest-dev | ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-shell |
@@ -68,6 +68,7 @@ cosign verify-attestation \
  --type slsaprovenance \
  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
  --certificate-identity-regexp '^https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v[0-9]+.[0-9]+.[0-9]+$' \
+ ghcr.io/portefaix/portefaix-distroless/infra-tools:latest@sha256:ce146eca0f43355cc4f4cc1004e66743a64d979034cee9fd657f2966358ce7bd
 ```
 
 - **Shell image**
@@ -77,6 +78,7 @@ cosign verify-attestation \
   --type slsaprovenance \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
   --certificate-identity-regexp '^https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v[0-9]+.[0-9]+.[0-9]+$' \
+  ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-shell@sha256:013e1628964880663cfbbe9db8d6a0e6b6e8a725920594359674e8c19d93c4f7
 ```
 
 - **Dev image**
@@ -86,6 +88,7 @@ cosign verify-attestation \
   --type slsaprovenance \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
   --certificate-identity-regexp '^https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v[0-9]+.[0-9]+.[0-9]+$' \
+  ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-dev@sha256:e6c26b534f457aad355c223bab8171af2a80ba3f354b58b8b2bfaefd29965394
 ```
 
 ## ✅ Verify the Image Signature
@@ -101,7 +104,7 @@ following command:
 ```shell
 cosign verify \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-  --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
+  --certificate-identity=https://github.com/portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
   ghcr.io/portefaix/portefaix-distroless/infra-tools:latest | jq
 ```
 
@@ -110,7 +113,7 @@ cosign verify \
 ```shell
 cosign verify \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-  --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
+  --certificate-identity=https://github.com/portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
   ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-shell | jq
 ```
 
@@ -119,7 +122,7 @@ cosign verify \
 ```shell
 cosign verify \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-  --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
+  --certificate-identity=https://github.com/portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
   ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-dev | jq
 ```
 
@@ -135,7 +138,7 @@ directly from the container registry and can be verified using using
 cosign verify-attestation \
   --type=https://spdx.dev/Document \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-  --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
+  --certificate-identity=https://github.com/portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
   ghcr.io/portefaix/portefaix-distroless/infra-tools:latest
 ```
 
@@ -145,7 +148,7 @@ cosign verify-attestation \
 cosign verify-attestation \
   --type=https://spdx.dev/Document \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-  --certificate-identity=https://github.com//portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
+  --certificate-identity=https://github.com/portefaix/portefaix-distroless/.github/workflows/release.yaml@refs/heads/main \
   ghcr.io/portefaix/portefaix-distroless/infra-tools:latest-shell
 ```
 
