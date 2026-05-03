@@ -96,20 +96,20 @@ repos:
     name: "🐚 shell / Format shell scripts"
     args: ["-i 4"]
 - repo: https://github.com/python-jsonschema/check-jsonschema
-  rev: 0.36.1
+  rev: 0.37.2
   hooks:
   - id: check-renovate
     name: "✅ renovate / Validate Renovate configuration"
     stages: [pre-commit]
     additional_dependencies: ["json5"]
 - repo: https://github.com/python-jsonschema/check-jsonschema
-  rev: 0.36.1
+  rev: 0.37.2
   hooks:
   - id: check-github-actions
     name: "✅ github-actions / Validate Github Actions configuration"
     stages: [pre-commit]
 - repo: https://github.com/python-jsonschema/check-jsonschema
-  rev: 0.36.1
+  rev: 0.37.2
   hooks:
   - id: check-github-workflows
     name: "✅ github-actions / Validate Github Actions workflow"
