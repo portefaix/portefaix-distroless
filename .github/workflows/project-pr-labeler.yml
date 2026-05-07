@@ -44,6 +44,6 @@ jobs:
       with:
         config: ${{ vars.PERMISSIONS_CONFIG }}
 
-    - uses: actions/labeler@v6.0.1
+    - uses: actions/labeler@v6.1.0
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
