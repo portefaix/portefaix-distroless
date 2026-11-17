@@ -115,7 +115,7 @@ jobs:
 
     - if: steps.check-melange.outputs.exists == 'true'
       name: Run Melange
-      uses: chainguard-dev/actions/melange-build@8f31e9482b447ff2c69eca944a09b4b31a4a85d0 # v1.7.2
+      uses: chainguard-dev/actions/melange-build@d496b2ab65497cac13d77ccd5038b8aae7e8c43b # v1.8.2
       with:
         config: ${{ inputs.config-dir }}/melange.yaml
         archs: ${{ inputs.archs }}
